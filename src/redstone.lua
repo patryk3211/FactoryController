@@ -6,7 +6,7 @@ local mappings = nil
 local peripherals = {}
 
 function module.load_mappings()
-    mappings = config.load_config("/config/mappings.conf")
+    mappings = config.load_config(shell.resolve("config/mappings.conf"))
     for k, v in pairs(mappings) do
         if peripherals[v.dev] == nil then
             peripherals[v.dev] = { device = peripherals.wrap(v.dev), sides = { [v.side] = 0 } }

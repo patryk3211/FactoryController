@@ -1,6 +1,13 @@
 local rootPath = "https://raw.githubusercontent.com/patryk3211/FactoryController/master/src/"
 local files = { "config.lua", "redstone.lua", "main.lua" }
 
+local installRoot = "/controller/"
+
+shell.setDir(installRoot)
+
 for file in files do
-    os.run({}, "/rom/programs/http/wget", rootPath..file)
+    shell.execute("wget", rootPath..file)
 end
+
+-- Create config dir
+fs.makeDir(shell.resolve("config"))
