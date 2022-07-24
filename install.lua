@@ -1,5 +1,5 @@
 local rootPath = "https://raw.githubusercontent.com/patryk3211/FactoryController/master/src/"
-local files = { "config.lua", "redstone.lua", "main.lua" }
+local files = { "config.lua", "redstone.lua", "main.lua", "utility.lua" }
 
 local installRoot = "/controller/"
 

@@ -5,8 +5,8 @@ local config = require("config")
 local mappings = nil
 local peripherals = {}
 
-function module.load_mappings()
-    mappings = config.load_config(shell.resolve("config/mappings.conf"))
+function module.loadMappings()
+    mappings = config.loadConfig(shell.resolve("config/mappings.conf"))
     for k, v in pairs(mappings) do
         if peripherals[v.dev] == nil then
             peripherals[v.dev] = { device = peripheral.wrap(v.dev), sides = { [v.side] = 0 } }
@@ -16,7 +16,7 @@ function module.load_mappings()
     end
 end
 
-function module.set_output(port, value)
+function module.setOutput(port, value)
     local mapping = mappings[port]
     local peri = peripherals[mapping.dev]
     local currentValue = peri.sides[mapping.side]
