@@ -1,18 +1,12 @@
 -- Load configs
 
 local redstoneMgr = require("redstone")
+local utility = require("utility")
+local windows = require("windows")
+
 redstoneMgr.loadMappings()
 
-local utility = require("utility")
-
 print("Initialized successfully")
-
-local function timerHandler()
-    print("1 Second")
-    utility.scheduleTimer(1, timerHandler)
-end
-
-utility.scheduleTimer(1, timerHandler)
 
 -- Program loop
 local running = true
@@ -22,5 +16,7 @@ while running do
 
     if event == "timer" then
         utility.handleTimerEvent(eventData)
+    elseif event == "monitor_touch" then
+        windows.handleTouch(eventData)
     end
 end
