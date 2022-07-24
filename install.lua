@@ -7,7 +7,7 @@ fs.delete(installRoot)
 fs.makeDir(installRoot)
 shell.setDir(installRoot)
 
-for file in files do
+for i, file in ipairs(files) do
     shell.execute("wget", rootPath..file)
 end
 
