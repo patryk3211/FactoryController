@@ -5,6 +5,7 @@ local utility = require("utility")
 local windows = require("windows")
 
 redstoneMgr.loadMappings()
+windows.start()
 
 print("Initialized successfully")
 
