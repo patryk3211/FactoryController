@@ -3,6 +3,8 @@ local files = { "config.lua", "redstone.lua", "main.lua" }
 
 local installRoot = "/controller/"
 
+fs.delete(installRoot)
+fs.makeDir(installRoot)
 shell.setDir(installRoot)
 
 for file in files do
