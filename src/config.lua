@@ -6,7 +6,7 @@ local function parse_config_line(line)
         return;
     end
 
-    local key, peri, side, bit = string.match(line, "(%a+) (%w+)/(%a+):(%d)")
+    local key, peri, side, bit = string.match(line, "(%a+) ([%w_]+)/(%a+):(%d)")
 
     print("New entry ('"..key.."') - side "..side.." of '"..peri.."', bit "..bit)
 
