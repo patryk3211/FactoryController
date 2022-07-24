@@ -1,3 +1,5 @@
+local module = {}
+
 -- Line Format: <Entry Name> <Peripheral ID>/<Side>:<Bit>
 local function parse_config_line(line)
     if line[1] == '#' then
@@ -16,7 +18,7 @@ local function parse_config_line(line)
     return key, { dev = peri, side = side, bit = bit }
 end
 
-function load_config(filename)
+function module.load_config(filename)
     local entries = { }
 
     for line in io.lines(filename) do
@@ -26,3 +28,5 @@ function load_config(filename)
 
     return entries
 end
+
+return module
