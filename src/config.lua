@@ -2,7 +2,7 @@ local module = {}
 
 -- Line Format: <Entry Name> <Peripheral ID>/<Side>:<Bit>
 local function parseConfigLine(line)
-    if line[1] == '#' then
+    if string.sub(line, 1, 1) == '#' then
         return;
     end
 
