@@ -6,14 +6,9 @@ local function parse_config_line(line)
         return;
     end
 
-    local values = string.gmatch(line, "(%a+) (.+)/(%a+):(%d)")
+    local key, peri, side, bit = string.match(line, "(%a+) (%w+)/(%a+):(%d)")
 
-    local key = values()
-    local peri = values()
-    local side = values()
-    local bit = values()
-
-    print("New entry (" + key + ") - side " + side + " of " + peri + ", bit " + bit)
+    print("New entry ("..key..") - side "..side.." of "..peri..", bit "..bit)
 
     return key, { dev = peri, side = side, bit = bit }
 end
