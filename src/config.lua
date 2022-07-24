@@ -2,8 +2,8 @@ local module = {}
 
 -- Line Format: <Entry Name> <Peripheral ID>/<Side>:<Bit>
 local function parseConfigLine(line)
-    if line[1] == '#' then
-        return;
+    if string.sub(line, 1, 1) == '#' then
+        return nil;
     end
 
     local key, peri, side, bit = string.match(line, "(%a+) ([%w_]+)/(%a+):(%d)")
@@ -18,7 +18,9 @@ function module.loadConfig(filename)
 
     for line in io.lines(filename) do
         local key, entry = parseConfigLine(line)
-        entries[key] = entry
+        if key ~= nil then
+            entries[key] = entry
+        end
     end
 
     return entries
