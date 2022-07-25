@@ -3,10 +3,14 @@ local module = {}
 -- Line Format: <Entry Name> <Peripheral ID>/<Side>:<Bit>
 local function parseMappingConfigLine(line)
     if string.sub(line, 1, 1) == '#' then
-        return nil;
+        return nil
     end
 
     local key, peri, side, bit = string.match(line, "([%w_%-]+) ([%w_]+)/(%a+):(%d)")
+
+    if key == nil then
+        return nil
+    end
 
     print("New entry ('"..key.."') - side "..side.." of '"..peri.."', bit "..bit)
 
@@ -31,7 +35,7 @@ local function parseValuesConfigLine(line)
         return nil;
     end
 
-    return string.match(line, "([%w_]+)%s*=%s*([%w_%.]+)")
+    return string.match(line, "([%w_]+)%s*=%s*(.+)")
 end
 
 local function loadValuesConfig(filename)

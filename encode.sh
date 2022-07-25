@@ -1,9 +1,9 @@
-echo "local files = {" > install_full.lua
+printf "local files = {" > install_full.lua
 
 for f in $(find src -type f); do
-    printf "    %s = \"%s\",\n" $(basename $f .lua) $(base64 $f | tr -d '\n') >> install_full.lua
+    printf "    %s = \"%s\"," $(basename $f .lua) $(base64 $f | tr -d '\n') >> install_full.lua
 done
 
-echo "}" >> install_full.lua
+printf "}" >> install_full.lua
 
-cat install.lua >> install_full.lua
+cat install_nohttp.lua | tr '\n' ';' >> install_full.lua

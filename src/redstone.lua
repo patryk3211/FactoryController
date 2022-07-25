@@ -1,6 +1,7 @@
 local module = {}
 
 local config = require("config")
+local utility = require("utility")
 
 local mappings = nil
 local peripherals = {}
@@ -37,6 +38,13 @@ function module.getInput(port)
     local peri = peripherals[mapping.dev]
     local value = peri.device.getAnalogInput(mapping.side)
     return bit32.band(1, bit32.rshift(value, mapping.bit)) == 1
+end
+
+function module.pulse(port)
+    module.setOutput(port, true)
+    utility.scheduleTimer(0.1, function ()
+        module.setOutput(port, false)
+    end)
 end
 
 return module

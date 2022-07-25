@@ -23,7 +23,8 @@ mapFile:write("sugar-transfer\nsugar-output\nbasin_control\n");
 mapFile:close()
 
 local controlConfFile = io.open(shell.resolve("config/control.conf"), "w+")
-controlConfFile:write("ingredientTransferRate = 1")
+controlConfFile:write("ingredientTransferRate = 1\n")
+controlConfFile:write("blockReaders = blockReader_0:sugar;blockReader_1:cocoa_beans,cocoa_powder;blockReader_2:cocoa_butter")
 controlConfFile:close()
 
 print("Configs generated")

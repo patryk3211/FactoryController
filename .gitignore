@@ -1,3 +1,4 @@
 minecopy
 install_full.lua
+install_nohttp.lua
 send.sh
