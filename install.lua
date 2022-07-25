@@ -24,6 +24,7 @@ mapFile:close()
 
 local controlConfFile = io.open(shell.resolve("config/control.conf"), "w+")
 controlConfFile:write("ingredientTransferRate = 1")
+controlConfFile:close()
 
 print("Configs generated")
 
