@@ -99,9 +99,9 @@ end
 
 local function waitForLiquid(name)
     if redstoneMgr.getInput("liquid_ready") then
+        activeProcesses = activeProcesses - 1
         os.queueEvent("liquid_ready")
         redstoneMgr.setOutput("fill_"..name, false)
-        activeProcesses = activeProcesses - 1
     else
         utility.scheduleTimer(0.1, waitForLiquid, name)
     end
@@ -111,6 +111,48 @@ function module.prepareLiquid(name)
     activeProcesses = activeProcesses + 1
     redstoneMgr.setOutput("fill_"..name, true)
     utility.scheduleTimer(0.1, waitForLiquid, name)
+end
+
+local function waitInputTankEmpty()
+    if redstoneMgr.getInput("liquid_empty") then
+        activeProcesses = activeProcesses - 1
+        os.queueEvent("liquid_empty")
+    else
+        utility.scheduleTimer(0.1, waitInputTankEmpty)
+    end
+end
+
+function module.emptyInputTank()
+    activeProcesses = activeProcesses + 1
+    waitInputTankEmpty()
+end
+
+local function waitPumpOutEnd()
+    if redstoneMgr.getInput("output_tank_empty") then
+        activeProcesses = activeProcesses - 1
+        os.queueEvent("output_tank_empty")
+    else
+        utility.scheduleTimer(0.1, waitPumpOutEnd)
+    end
+end
+
+local function waitPumpOutStart(timeout)
+    if timeout >= 100 then
+        activeProcesses = activeProcesses - 1
+        os.queueEvent("output_tank_empty")
+        print("Product pump out timed out trying to start")
+    end
+
+    if redstoneMgr.getInput("output_tank_empty") then
+        utility.scheduleTimer(0.1, waitPumpOutStart, timeout + 1)
+    else
+        waitPumpOutEnd()
+    end
+end
+
+function module.outputProduct()
+    activeProcesses = activeProcesses + 1
+    waitPumpOutStart(0)
 end
 
 function module.isBusy()
