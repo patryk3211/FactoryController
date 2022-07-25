@@ -6,4 +6,4 @@ done
 
 printf "}" >> install_full.lua
 
-cat install_nohttp.lua | tr '\n' ';' >> install_full.lua
+cat install_nohttp.lua | tr '\n' ' ' >> install_full.lua

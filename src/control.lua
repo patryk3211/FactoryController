@@ -18,13 +18,13 @@ function module.loadConfig()
 
     -- Block readers (blockReader_0:sugar;blockReader_1:cocoa_beans,cocoa_powder;blockReader_2:cocoa_butter)
     local blockReaders = controlConfig.blockReaders
-    for readerId, values in string.gmatch(blockReaders, "([%w_]+):(.-);?") do
+    for readerId, values in string.gmatch(blockReaders, "([%w_]+):([%w_,]+);?") do
         local reader = peripheral.wrap(readerId)
         if reader == nil then
             error("Could not find '"..readerId.."' reader")
         end
 
-        for ingredient in string.gmatch(values, "([%w_]-),?") do
+        for ingredient in string.gmatch(values, "([%w_]+),?") do
             ingredientReaderMap[ingredient] = reader
             print("Ingredient '"..ingredient.."' read from "..readerId)
         end
@@ -44,7 +44,21 @@ local function checkIngredientArrived(ingredient, amount)
     local data = reader.getBlockData()
     local itemCount = data.handler.BigItems["0"].Amount
 
-    if itemCount < amount then
+    -- If the lower code is unreliable then this might fix it
+    --if itemCount >= amount - ingredientTransferRate * 2 then
+    --    while true do
+    --        itemCount = reader.getBlockData().handler.BigItems["0"].Amount
+    --        if itemCount >= amount then
+    --            redstoneMgr.setOutput(ingredient.."-transfer", false)
+    --            redstoneMgr.pulse(ingredient.."-output")
+    --            break
+    --        end
+    --    end
+    --else
+    --    utility.scheduleTimer(0.05, checkIngredientArrived, ingredient, amount)
+    --end
+
+    if itemCount < amount - ingredientTransferRate * 2 then
         utility.scheduleTimer(0.05, checkIngredientArrived, ingredient, amount)
     else
         redstoneMgr.setOutput(ingredient.."-transfer", false)
