@@ -4,21 +4,22 @@ local redstoneMgr = require("redstone")
 local utility = require("utility")
 local windows = require("windows")
 local control = require("control")
+local guis = require("guis")
+local recipes = require("recipes")
 
+windows.start()
 redstoneMgr.loadMappings()
 control.loadConfig()
-windows.start()
+recipes.load()
 
 print("Initialized successfully")
 
-windows.addButton("button_0", 3, 3, 5, 3, "Hey", colors.white, colors.blue, function ()
-    control.outputIngredient("sugar", 8)
-end)
+windows.setGui(guis.start)
 
 -- Program loop
 local running = true
 while running do
-    local eventData = {os.pullEvent()}
+    local eventData = { os.pullEvent() }
     local event = eventData[1]
 
     if event == "timer" then

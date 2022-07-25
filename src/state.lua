@@ -1,5 +1,6 @@
-local module = {}
+local state = {}
 
+state.recipe = "chocolate"
+state.activeValve = nil
 
-
-return module
+return state

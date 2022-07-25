@@ -1,5 +1,5 @@
 local rootPath = "https://raw.githubusercontent.com/patryk3211/FactoryController/master/src/"
-local files = { "config.lua", "redstone.lua", "main.lua", "utility.lua", "windows.lua", "control.lua" }
+local files = { "config.lua", "redstone.lua", "main.lua", "utility.lua", "windows.lua", "control.lua", "guis.lua", "state.lua" }
 
 local installRoot = "/controller/"
 
@@ -28,5 +28,13 @@ controlConfFile:write("blockReaders = blockReader_0:sugar;blockReader_1:cocoa_be
 controlConfFile:close()
 
 print("Configs generated")
+
+fs.makeDir(shell.resolve("recipes"))
+
+local chocolateRecipe = io.open(shell.resolve("recipes/chocolate.rec"), "w+")
+chocolateRecipe:write("name=Chocolate\noutput=chocolate\nactions:\n")
+chocolateRecipe:close()
+
+print("Recipes generated")
 
 print("Install complete")

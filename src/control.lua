@@ -3,10 +3,13 @@ local module = {}
 local redstoneMgr = require("redstone")
 local utility = require("utility")
 local config = require("config")
+local state = require("state")
 
 local controlConfig = nil
 local ingredientTransferRate = 1
 local ingredientReaderMap = {}
+
+local activeProcesses = 0
 
 function module.loadConfig()
     controlConfig = config.loadConfig(shell.resolve("config/control.conf"), "values")
@@ -63,16 +66,55 @@ local function checkIngredientArrived(ingredient, amount)
     else
         redstoneMgr.setOutput(ingredient.."-transfer", false)
         redstoneMgr.pulse(ingredient.."-output")
+        utility.scheduleTimer(2, function ()
+            activeProcesses = activeProcesses - 1
+            os.queueEvent("ingredient_arrived", ingredient)
+        end)
     end
 end
 
 function module.outputIngredient(ingredient, amount)
+    activeProcesses = activeProcesses + 1
     redstoneMgr.setOutput(ingredient.."-transfer", true)
     utility.scheduleTimer(0.05, checkIngredientArrived, ingredient, amount)
 end
 
 function module.spinBasins()
     redstoneMgr.pulse("basin_control")
+end
+
+function module.setOutputTank(chocolate)
+    activeProcesses = activeProcesses + 1
+    if state.activeValve ~= nil then
+        redstoneMgr.pulse(state.activeValve)
+    end
+    local newValve = "valve_"..chocolate
+    redstoneMgr.pulse(newValve)
+    state.activeValve = newValve
+    utility.scheduleTimer(1, function ()
+        activeProcesses = activeProcesses - 1
+        os.queueEvent("valve_switched", newValve)
+    end)
+end
+
+local function waitForLiquid(name)
+    if redstoneMgr.getInput("liquid_ready") then
+        os.queueEvent("liquid_ready")
+        redstoneMgr.setOutput("fill_"..name, false)
+        activeProcesses = activeProcesses - 1
+    else
+        utility.scheduleTimer(0.1, waitForLiquid, name)
+    end
+end
+
+function module.prepareLiquid(name)
+    activeProcesses = activeProcesses + 1
+    redstoneMgr.setOutput("fill_"..name, true)
+    utility.scheduleTimer(0.1, waitForLiquid, name)
+end
+
+function module.isBusy()
+    return activeProcesses ~= 0
 end
 
 return module
