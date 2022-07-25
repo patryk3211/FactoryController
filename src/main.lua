@@ -9,6 +9,8 @@ windows.start()
 
 print("Initialized successfully")
 
+windows.addButton("button_0", 3, 3, 5, 3, "Hey", colors.white, colors.blue, nil)
+
 -- Program loop
 local running = true
 while running do

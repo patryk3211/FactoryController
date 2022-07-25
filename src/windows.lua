@@ -26,14 +26,14 @@ local function box(x, y, width, height)
     for i = 0, width do
         line = line.." "
     end
-    display.setCursorPos(x, y)
     for i = 0, height do
+        display.setCursorPos(x, y+i)
         display.write(line)
     end
 end
 
 function module.redraw()
-    display.setBackgroundColor(15)
+    display.setBackgroundColor(colors.black)
     display.clear()
 
     for name, button in pairs(buttons) do
