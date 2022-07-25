@@ -2,15 +2,19 @@ local module = {}
 
 local recipeMgr = require("recipes")
 local windows = require("windows")
+local state = require("state")
 
-module.start = {
-    order = { "top_bar", "button_start", "button_select_recipe" },
-    button_start = { type = "button", x = 11, y = 3, width = 19, height = 5, text = "Start", fg = colors.white, bg = colors.gray, handler = nil },
-    button_select_recipe = { type = "button", x = 11, y = 9, width = 19, height = 5, text = "Select Recipe", fg = colors.white, bg = colors.gray, handler = function ()
-        windows.setGui(module.recipes())
-    end},
-    top_bar = { type = "panel", x = 1, y = 1, height = 1, width = 39, color = colors.blue }
-}
+function module.start()
+    return {
+        order = { "top_bar", "top_bar_text", "button_start", "button_select_recipe" },
+        button_start = { type = "button", x = 11, y = 3, width = 19, height = 5, text = "Start", fg = colors.white, bg = colors.gray, handler = nil },
+        button_select_recipe = { type = "button", x = 11, y = 9, width = 19, height = 5, text = "Select Recipe", fg = colors.white, bg = colors.gray, handler = function ()
+            windows.setGui(module.recipes())
+        end},
+        top_bar = { type = "panel", x = 1, y = 1, height = 1, width = 39, color = colors.blue },
+        top_bar_text = { type = "text", x = 1, y = 1, height = 1, width = 39, fg = colors.black, bg = colors.blue, text = "Recipe: "..recipeMgr.recipes()[state.recipe].name }
+    }
+end
 
 local recipeScreen = nil
 function module.recipes()
@@ -37,6 +41,8 @@ function module.recipes()
             end
             recipeScreen[id.."_button"] = { type = "button", x = 1, y = y, height = 1, width = 39, fg = colors.black, bg = color, text = "", handler = function()
                 print("Selected '"..id.."' recipe")
+                state.recipe = id;
+                windows.setGui(module.start())
             end }
             recipeScreen[id.."_text"] = { type = "text", x = 1, y = y, text = recipe.name, bg = color, fg = colors.black }
             recipeScreen.order[#recipeScreen.order+1] = id.."_button"

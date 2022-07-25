@@ -14,7 +14,7 @@ recipes.load()
 
 print("Initialized successfully")
 
-windows.setGui(guis.start)
+windows.setGui(guis.start())
 
 -- Program loop
 local running = true
