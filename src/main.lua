@@ -19,5 +19,6 @@ while running do
         utility.handleTimerEvent(eventData)
     elseif event == "monitor_touch" then
         windows.handleTouch(eventData)
+        windows.redraw()
     end
 end
