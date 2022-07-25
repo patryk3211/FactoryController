@@ -9,7 +9,9 @@ windows.start()
 
 print("Initialized successfully")
 
-windows.addButton("button_0", 3, 3, 5, 3, "Hey", colors.white, colors.blue, nil)
+windows.addButton("button_0", 3, 3, 5, 3, "Hey", colors.white, colors.blue, function ()
+    print("Button pressed")
+end)
 
 -- Program loop
 local running = true

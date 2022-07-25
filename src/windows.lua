@@ -9,16 +9,26 @@ end
 
 function module.handleTouch(eventData)
     local x, y = eventData[3], eventData[4]
-    display.setCursorPos(x, y)
-    display.blit(" ", "F", "0")
+    for name, button in pairs(buttons) do
+        if x >= button.x and y >= button.y and x < button.x + button.width and y < button.y + button.height then
+            if button.handler ~= nil then
+                button.handler()
+            end
+            break
+        end
+    end
 end
 
 function module.addButton(name, x, y, width, height, text, fg, bg, clickHandler)
-    buttons[name] = { x = x, y = y, width = width, height = height, text = text, fg = fg, bg = bg, handelr = clickHandler }
+    buttons[name] = { x = x, y = y, width = width, height = height, text = text, fg = fg, bg = bg, handler = clickHandler }
 end
 
 function module.removeButton(name)
     buttons[name] = nil
+end
+
+function module.removeAll()
+    buttons = {}
 end
 
 local function box(x, y, width, height)
