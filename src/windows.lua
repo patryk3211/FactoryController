@@ -23,10 +23,10 @@ end
 
 local function box(x, y, width, height)
     local line = ""
-    for i = 0, width do
+    for i = 0, width-1 do
         line = line.." "
     end
-    for i = 0, height do
+    for i = 0, height-1 do
         display.setCursorPos(x, y+i)
         display.write(line)
     end
