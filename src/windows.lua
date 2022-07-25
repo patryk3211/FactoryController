@@ -42,7 +42,9 @@ function module.redraw()
 
         box(button.x, button.y, button.width, button.height)
 
-        display.setCursorPos(button.x, button.y)
+        local textOffset = (button.width - button.text:len()) / 2
+        display.setCursorPos(button.x + textOffset, button.y + button.height / 2)
+        display.write(button.text)
     end
 end
 
