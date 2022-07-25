@@ -6,12 +6,15 @@ local mappings = nil
 local peripherals = {}
 
 function module.loadMappings()
-    mappings = config.loadConfig(shell.resolve("config/mappings.conf"))
+    mappings = config.loadConfig(shell.resolve("config/mappings.conf"), "mapping")
     for k, v in pairs(mappings) do
         if peripherals[v.dev] == nil then
-            peripherals[v.dev] = { device = peripheral.wrap(v.dev), sides = { [v.side] = 0 } }
+            local dev = peripheral.wrap(v.dev)
+            peripherals[v.dev] = { device = dev, sides = { [v.side] = 0 } }
+            dev.setAnalogOutput(v.side, 0)
         else
             peripherals[v.dev].sides[v.side] = 0
+            peripherals[v.dev].device.setAnalogOutput(v.side, 0)
         end
     end
 end
@@ -27,6 +30,13 @@ function module.setOutput(port, value)
     end
     peri.device.setAnalogOutput(mapping.side, currentValue)
     peri.sides[mapping.side] = currentValue
+end
+
+function module.getInput(port)
+    local mapping = mappings[port]
+    local peri = peripherals[mapping.dev]
+    local value = peri.device.getAnalogInput(mapping.side)
+    return bit32.band(1, bit32.rshift(value, mapping.bit)) == 1
 end
 
 return module

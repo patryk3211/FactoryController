@@ -3,6 +3,7 @@
 local redstoneMgr = require("redstone")
 local utility = require("utility")
 local windows = require("windows")
+local control = require("control")
 
 redstoneMgr.loadMappings()
 windows.start()
@@ -10,7 +11,7 @@ windows.start()
 print("Initialized successfully")
 
 windows.addButton("button_0", 3, 3, 5, 3, "Hey", colors.white, colors.blue, function ()
-    print("Button pressed")
+    control.outputIngredient("sugar", 8)
 end)
 
 -- Program loop
