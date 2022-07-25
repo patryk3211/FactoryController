@@ -31,7 +31,7 @@ local function parseValuesConfigLine(line)
         return nil;
     end
 
-    return string.match(line, "([%w_]+)%s*=%s*([%w]+)")
+    return string.match(line, "([%w_]+)%s*=%s*([%w_%.]+)")
 end
 
 local function loadValuesConfig(filename)

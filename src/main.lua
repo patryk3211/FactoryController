@@ -6,6 +6,7 @@ local windows = require("windows")
 local control = require("control")
 
 redstoneMgr.loadMappings()
+control.loadConfig()
 windows.start()
 
 print("Initialized successfully")
