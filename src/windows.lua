@@ -33,7 +33,7 @@ local function box(x, y, width, height)
 end
 
 function module.redraw()
-    display.setBackgroundColor("F")
+    display.setBackgroundColor(15)
     display.clear()
 
     for name, button in pairs(buttons) do
