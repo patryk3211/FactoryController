@@ -61,7 +61,10 @@ local function interpretLine(context)
         line = list[context.current_line]
     end
 
-    local instruction, arg1, arg2 = line:match("([%w_]+)%s*([%w_]+)?%s*([%w_%.]+)?%s*")
+    --local instruction, arg1, arg2 = line:match("([%w_]+)%s*([%w_]+)?%s*([%w_%.]+)?%s*")
+    local instruction = line:match("([%w_]+)%s*");
+    local arg1 = line:match("[%w_]+%s*([%w_]+)%s*");
+    local arg2 = line:match("[%w_]+%s*[%w_]+%s*([%w_%.]+)%s*");
 
     if instruction == "output" then
         control.setOutputTank(arg1)
