@@ -54,9 +54,9 @@ function module.scheduleTimer(time, handler, ...)
 end
 
 function module.handleTimerEvent(eventData)
-    --local handler = timerScheduled[eventData[2]]
-    --timerScheduled[eventData[2]] = nil
-    --handler.handler(table.unpack(handler.args))
+    if eventData[2] ~= systemTimer then
+        return
+    end
     local timer = table.remove(timers, 1)
     for i = 1, #timer.handlers do
         local handler = timer.handlers[i]
