@@ -69,13 +69,13 @@ function module.recipes()
 end
 
 module.manualControl = {
-    order = { "top_bar", "button_back", "top_bar_text" },
+    order = { "top_bar", "button_back", "top_bar_text", "button_spin_basin" },
     top_bar = { type = "panel", x = 1, y = 1, height = 1, width = 39, color = colors.blue },
     button_back = { type = "button", x = 39-3, y = 1, height = 1, width = 4, bg = colors.red, fg = colors.white, text = "Back", handler = function ()
         windows.setGui(module.start())
     end},
     top_bar_text = { type = "text", x = 1, y = 1, height = 1, width = 39, fg = colors.black, bg = colors.blue, text = "Manual Control" },
-    button_spin_basin = { type = button, x = 2, y = 3, height = 3, width = 19, fg = colors.white, bg = colors.gray, text = "Spin Basins", handler = function ()
+    button_spin_basin = { type = "button", x = 2, y = 3, height = 3, width = 19, fg = colors.white, bg = colors.gray, text = "Spin Basins", handler = function ()
         control.spinBasins()
     end}
 }
