@@ -137,7 +137,7 @@ module.manualControl = {
 }
 
 module.running = {
-    order = { "top_bar" },
+    order = { "top_bar", "top_bar_text", "stop_button" },
     top_bar = { type = "panel", x = 1, y = 1, height = 1, width = 39, color = colors.blue },
     top_bar_text = { type = "text", x = 1, y = 1, bg = colors.blue, fg = colors.black, text = "Running" },
     stop_button = { type = "button", x = 39-3, y = 1, height = 1, width = 4, bg = colors.red, fg = colors.white, text = "Stop", handler = function ()

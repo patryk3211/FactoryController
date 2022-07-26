@@ -89,7 +89,9 @@ local function interpretLine(context)
     elseif instruction == "pump_out" then
         control.outputProduct()
     else
-        error("Unknown instruction '"..instruction.."'")
+        if instruction ~= nil then
+            error("Unknown instruction '"..instruction.."'")
+        end
     end
 end
 
