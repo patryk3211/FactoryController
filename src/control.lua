@@ -36,10 +36,15 @@ function module.loadConfig()
     print("Ingredient Transfer Rate = "..ingredientTransferRate)
 end
 
-local function checkIngredientArrived(ingredient, amount)
+local function checkIngredientArrived(ingredient, amount, timeout)
     local reader = ingredientReaderMap[ingredient]
     if reader == nil then
         error("An unknown ingredient was requested")
+        return
+    end
+
+    if timeout > 200 then
+        state.error = "Failed to prepare "..amount.." "..ingredient..", timed out"
         return
     end
 
@@ -62,7 +67,7 @@ local function checkIngredientArrived(ingredient, amount)
     --end
 
     if itemCount < amount - ingredientTransferRate * 2 then
-        utility.scheduleTimer(0.05, checkIngredientArrived, ingredient, amount)
+        utility.scheduleTimer(0.05, checkIngredientArrived, ingredient, amount, timeout + 1)
     else
         redstoneMgr.setOutput(ingredient.."-transfer", false)
         redstoneMgr.pulse(ingredient.."-output")
@@ -76,7 +81,7 @@ end
 function module.outputIngredient(ingredient, amount)
     activeProcesses = activeProcesses + 1
     redstoneMgr.setOutput(ingredient.."-transfer", true)
-    utility.scheduleTimer(0.05, checkIngredientArrived, ingredient, amount)
+    utility.scheduleTimer(0.05, checkIngredientArrived, ingredient, amount, 0)
 end
 
 function module.spinBasins()
@@ -111,20 +116,24 @@ function module.setOutputTank(chocolate)
     end)
 end
 
-local function waitForLiquid(name)
+local function waitForLiquid(name, timeout)
     if redstoneMgr.getInput("liquid_ready") then
         activeProcesses = activeProcesses - 1
         os.queueEvent("control", "liquid_ready")
         redstoneMgr.setOutput("fill_"..name, false)
     else
-        utility.scheduleTimer(0.1, waitForLiquid, name)
+        if timeout > 100 then
+            state.error("Failed to prepare "..name..", timed out")
+            return
+        end
+        utility.scheduleTimer(0.1, waitForLiquid, name, timeout + 1)
     end
 end
 
 function module.prepareLiquid(name)
     activeProcesses = activeProcesses + 1
     redstoneMgr.setOutput("fill_"..name, true)
-    utility.scheduleTimer(0.1, waitForLiquid, name)
+    utility.scheduleTimer(0.1, waitForLiquid, name, 0)
 end
 
 local function waitInputTankEmpty()
@@ -154,7 +163,7 @@ local function waitPumpOutStart(timeout)
     if timeout >= 100 then
         activeProcesses = activeProcesses - 1
         os.queueEvent("control", "output_tank_empty")
-        print("Product pump out timed out trying to start")
+        print("Product pump out timed out trying to start, might have been empty")
     end
 
     if redstoneMgr.getInput("output_tank_empty") then
