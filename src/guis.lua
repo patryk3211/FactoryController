@@ -84,7 +84,7 @@ local function selectOutput(name, window)
 end
 
 module.manualControl = {
-    order = { "top_bar", "button_back", "top_bar_text", "button_spin_basin", "button_prepare_ingredient", "item_ingredient_group", "button_prepare_liquid", "fluid_ingredient_group", "output_tank_group", "button_output_select" },
+    order = { "top_bar", "button_back", "top_bar_text", "button_spin_basin", "button_prepare_ingredient", "item_ingredient_group", "button_prepare_liquid", "fluid_ingredient_group", "button_output_select", "output_tank_group" },
     top_bar = { type = "panel", x = 1, y = 1, height = 1, width = 39, color = colors.blue },
     button_back = { type = "button", x = 39-3, y = 1, height = 1, width = 4, bg = colors.red, fg = colors.white, text = "Back", handler = function ()
         windows.setGui(module.start())
