@@ -60,7 +60,7 @@ function module.handleTimerEvent(eventData)
         return
     end
     local timer = table.remove(timers, 1)
-    print("Firing after "..timer.." ticks")
+    print("Firing after "..timer.time.." ticks")
     for i = 1, #timer.handlers do
         local handler = timer.handlers[i]
         handler.func(table.unpack(handler.args))
