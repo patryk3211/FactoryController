@@ -15,7 +15,7 @@ function module.scheduleTimer(time, handler, ...)
             }
         }
         systemTimer = os.startTimer(time)
-        timerStartTime = os.clock()
+        timerStartTime = os.clock() * 20
         return
     else
         local clock = os.clock()
