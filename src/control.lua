@@ -80,7 +80,14 @@ function module.outputIngredient(ingredient, amount)
 end
 
 function module.spinBasins()
+    activeProcesses = activeProcesses + 1
     redstoneMgr.pulse("basin_control")
+    utility.scheduleTimer(1.5, function ()
+        state.basinPosition = (state.basinPosition + 1) % 4
+        if state.basinPosition ~= 0 then
+            redstoneMgr.pulse("dispenser_"..state.basinPosition)
+        end
+    end)
 end
 
 function module.setOutputTank(chocolate)

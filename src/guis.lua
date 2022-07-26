@@ -6,10 +6,13 @@ local state = require("state")
 
 function module.start()
     return {
-        order = { "top_bar", "top_bar_text", "button_start", "button_select_recipe" },
+        order = { "top_bar", "top_bar_text", "button_start", "button_select_recipe", "button_manual" },
         button_start = { type = "button", x = 11, y = 3, width = 19, height = 5, text = "Start", fg = colors.white, bg = colors.gray, handler = nil },
         button_select_recipe = { type = "button", x = 11, y = 9, width = 19, height = 5, text = "Select Recipe", fg = colors.white, bg = colors.gray, handler = function ()
             windows.setGui(module.recipes())
+        end},
+        button_manual = { type = "button", x = 13, y = 15, width = 15, height = 3, text = "Manual", fg = colors.white, bg = colors.gray, function ()
+            windows.setGui(module.manualControl)
         end},
         top_bar = { type = "panel", x = 1, y = 1, height = 1, width = 39, color = colors.blue },
         top_bar_text = { type = "text", x = 1, y = 1, height = 1, width = 39, fg = colors.black, bg = colors.blue, text = "Recipe: "..recipeMgr.recipes()[state.recipe].name }
@@ -63,5 +66,13 @@ function module.recipes()
 
     return recipeScreen
 end
+
+module.manualControl = {
+    order = {},
+    top_bar = { type = "panel", x = 1, y = 1, height = 1, width = 39, color = colors.blue },
+    button_back = { type = "button", x = 39-4, y = 1, height = 1, width = 4, bg = colors.red, fg = color.white, text = "Back", handler = function ()
+        windows.setGui(module.start())
+    end}
+}
 
 return module
