@@ -67,7 +67,7 @@ local function checkIngredientArrived(ingredient, amount, timeout)
     --    utility.scheduleTimer(0.05, checkIngredientArrived, ingredient, amount)
     --end
 
-    if itemCount < amount - ingredientTransferRate * 2 then
+    if itemCount < amount then
         utility.scheduleTimer(0.05, checkIngredientArrived, ingredient, amount, timeout + 1)
     else
         redstoneMgr.setOutput(ingredient.."-transfer", false)
