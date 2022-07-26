@@ -78,7 +78,7 @@ module.manualControl = {
     button_back = { type = "button", x = 39-3, y = 1, height = 1, width = 4, bg = colors.red, fg = colors.white, text = "Back", handler = function ()
         windows.setGui(module.start())
     end},
-    top_bar_text = { type = "text", x = 1, y = 1, height = 1, width = 39, bg = colors.blue, text = "Manual Control" },
+    top_bar_text = { type = "text", x = 1, y = 1, height = 1, width = 39, bg = colors.blue, fg = colors.black, text = "Manual Control" },
     button_spin_basin = { type = "button", x = 2, y = 3, height = 3, width = 18, fg = colors.white, bg = colors.gray, text = "Spin Basins", handler = function ()
         control.spinBasins()
     end},
