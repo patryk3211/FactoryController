@@ -70,10 +70,16 @@ end
 
 local function selectIngredient(name, window)
     window.item_ingredient_group.visible = false
+    control.outputIngredient(name, 8)
+end
+
+local function selectFluid(name, window)
+    window.fluid_ingredient_group.visible = false
+    control.prepareLiquid(name)
 end
 
 module.manualControl = {
-    order = { "top_bar", "button_back", "top_bar_text", "button_spin_basin", "button_prepare_ingredient", "item_ingredient_group" },
+    order = { "top_bar", "button_back", "top_bar_text", "button_spin_basin", "button_prepare_ingredient", "item_ingredient_group", "button_prepare_liquid", "fluid_ingredient_group" },
     top_bar = { type = "panel", x = 1, y = 1, height = 1, width = 39, color = colors.blue },
     button_back = { type = "button", x = 39-3, y = 1, height = 1, width = 4, bg = colors.red, fg = colors.white, text = "Back", handler = function ()
         windows.setGui(module.start())
@@ -82,7 +88,7 @@ module.manualControl = {
     button_spin_basin = { type = "button", x = 2, y = 3, height = 3, width = 18, fg = colors.white, bg = colors.gray, text = "Spin Basins", handler = function ()
         control.spinBasins()
     end},
-    item_ingredient_group = { type = "group", x = 21, y = 4, visible = false, elements = {
+    item_ingredient_group = { type = "group", x = 22, y = 4, visible = false, elements = {
         order = { "top_bar", "top_bar_text", "panel", "sugar_button", "beans_button", "powder_button", "butter_button" },
         top_bar = { type = "panel", x = 1, y = 1, width = 15, height = 1, color = colors.blue },
         top_bar_text = { type = "text", x = 1, y = 1, bg = colors.blue, fg = colors.white, text = "Ingredients" },
@@ -92,8 +98,19 @@ module.manualControl = {
         powder_button = { type = "button", x = 1, y = 4, width = 15, height = 1, bg = colors.white, fg = colors.black, text = "Cocoa Powder", handler = function (window) selectIngredient("cocoa_powder", window) end },
         butter_button = { type = "button", x = 1, y = 5, width = 15, height = 1, bg = colors.white, fg = colors.black, text = "Cocoa Butter", handler = function (window) selectIngredient("cocoa_butter", window) end }
     } },
-    button_prepare_ingredient = { type = "button", x = 20, y = 3, height = 3, width = 18, fg = colors.white, bg = colors.gray, text = "Ingredient", handler = function (window)
+    button_prepare_ingredient = { type = "button", x = 21, y = 3, height = 3, width = 18, fg = colors.white, bg = colors.gray, text = "Ingredient", handler = function (window)
         window.item_ingredient_group.visible = true
+    end},
+    fluid_ingredient_group = { type = "group", x = 3, y = 8, visible = false, elements = {
+        order = { "top_bar", "top_bar_text", "panel", "water_button", "milk_button" },
+        top_bar = { type = "panel", x = 1, y = 1, width = 7, height = 1, color = colors.blue },
+        top_bar_text = { type = "text", x = 1, y = 1, bg = colors.blue, fg = colors.white, text = "Fluids" },
+        panel = { type = "panel", x = 1, y = 2, width = 7, height = 2, color = colors.white },
+        water_button = { type = "button", x = 1, y = 2, width = 7, height = 1, bg = colors.white, fg = colors.black, text = "Water", handler = function (window) selectFluid("water", window) end },
+        milk_button = { type = "button", x = 1, y = 3, width = 6, height = 1, bg = colors.white, fg = colors.black, text = "Milk", handler = function (window) selectFluid("milk", window) end }
+    } },
+    button_prepare_liquid = { type = "button", x = 2, y = 7, height = 3, width = 18, fg = colors.white, bg = colors.gray, text = "Base Fluid", handler = function (window)
+        window.fluid_ingredient_group.visible = true
     end}
 }
 
