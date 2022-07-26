@@ -19,7 +19,7 @@ function module.scheduleTimer(time, handler, ...)
         return
     else
         local timerRunTime = os.clock() * 20 - timerStartTime
-        timers[1].time = (timers[1].time * 20 - timerRunTime) / 20
+        timers[1].time = timers[1].time * 20 - timerRunTime
         timerStartTime = os.clock() * 20
         print("Timer changed by "..timerRunTime.." new time "..timers[1].time)
     end
