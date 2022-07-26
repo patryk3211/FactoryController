@@ -8,7 +8,9 @@ local control = require("control")
 function module.start()
     return {
         order = { "top_bar", "top_bar_text", "button_start", "button_select_recipe", "button_manual" },
-        button_start = { type = "button", x = 11, y = 3, width = 19, height = 5, text = "Start", fg = colors.white, bg = colors.gray, handler = nil },
+        button_start = { type = "button", x = 11, y = 3, width = 19, height = 5, text = "Start", fg = colors.white, bg = colors.gray, handler = function ()
+            os.queueEvent("start_recipe")
+        end},
         button_select_recipe = { type = "button", x = 11, y = 9, width = 19, height = 5, text = "Select Recipe", fg = colors.white, bg = colors.gray, handler = function ()
             windows.setGui(module.recipes())
         end},

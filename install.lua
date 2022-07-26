@@ -32,7 +32,8 @@ print("Configs generated")
 fs.makeDir(shell.resolve("recipes"))
 
 local chocolateRecipe = io.open(shell.resolve("recipes/chocolate.rec"), "w+")
-chocolateRecipe:write("name=Chocolate\noutput=chocolate\nactions:\n")
+chocolateRecipe:write("name=Chocolate\ninit:\noutput chocolate\nbase_fluid milk\ningredient sugar 8\ningredient cocoa_beans 8\nwait time 1.5\ningredient sugar 8\n ingredient cocoa_beans 8\nwait idle")
+chocolateRecipe:write("loop:\n");
 chocolateRecipe:close()
 
 print("Recipes generated")
