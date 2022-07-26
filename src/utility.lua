@@ -17,8 +17,11 @@ function module.scheduleTimer(time, handler, ...)
         timerStartTime = os.clock()
         return
     end
-    --local timer = os.startTimer(time)
-    --timerScheduled[timer] = { handler = handler, args = {...} }
+
+    local timerRunTime = os.clock() - timerStartTime
+    timers[1].time = timers[1].time - timerRunTime
+    timerStartTime = os.clock()
+
     local timeLeft = time
     for i = 1, #timers do
         local timer = timers[i]
@@ -43,11 +46,8 @@ function module.scheduleTimer(time, handler, ...)
             }
             table.insert(timers, i, newTimer)
             if i == 1 then
-                local timerRunTime = os.clock() - timerStartTime
                 os.cancelTimer(systemTimer)
-                timer.time = timer.time - timerRunTime
                 systemTimer = os.startTimer(time)
-                timerStartTime = os.clock()
             end
         end
     end
