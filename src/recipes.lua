@@ -14,7 +14,7 @@ local function parseRecipe(file)
     local currentList = nil
     for line in io.lines(shell.resolve("recipes/"..file)) do
         if line:sub(1, 1) ~= "#" then
-            local key, value = string.match(line, "([%w_]+)=([%w_]+)")
+            local key, value = string.match(line, "([%w_]+)=([%w_%s]+)")
             if key ~= nil then
                 -- Special entry
                 recipe[key] = value
