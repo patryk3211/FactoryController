@@ -73,7 +73,7 @@ local function selectIngredient(name, window)
 end
 
 module.manualControl = {
-    order = { "top_bar", "button_back", "top_bar_text", "button_spin_basin", "item_ingredient_group" },
+    order = { "top_bar", "button_back", "top_bar_text", "button_spin_basin", "button_prepare_ingredient", "item_ingredient_group" },
     top_bar = { type = "panel", x = 1, y = 1, height = 1, width = 39, color = colors.blue },
     button_back = { type = "button", x = 39-3, y = 1, height = 1, width = 4, bg = colors.red, fg = colors.white, text = "Back", handler = function ()
         windows.setGui(module.start())
@@ -83,7 +83,7 @@ module.manualControl = {
         control.spinBasins()
     end},
     item_ingredient_group = { type = "group", x = 20, y = 4, visible = false, elements = {
-        order = { "top_bar", "top_bar_text" },
+        order = { "top_bar", "top_bar_text", "panel", "sugar_button", "beans_button", "powder_button", "butter_button" },
         top_bar = { type = "panel", x = 1, y = 1, width = 13, height = 1, color = colors.blue },
         top_bar_text = { type = "text", x = 1, y = 1, bg = colors.blue, fg = colors.white, text = "Ingredients" },
         panel = { type = "panel", x = 1, y = 2, width = 13, height = 4, color = colors.white },
