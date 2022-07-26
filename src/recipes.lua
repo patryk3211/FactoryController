@@ -13,22 +13,24 @@ local function parseRecipe(file)
     local recipe = { name = id, init = {}, loop = {} }
     local currentList = nil
     for line in io.lines(shell.resolve("recipes/"..file)) do
-        local key, value = string.match(line, "([%w_]+)=([%w_]+)")
-        if key ~= nil then
-            -- Special entry
-            recipe[key] = value
-        else
-            local listName = string.match(line, "([%w_]+):")
-            if listName == nil then
-                if currentList == nil then
-                    print("Error! Missing list definition")
-                    return
-                end
-                recipe[currentList][#recipe[currentList]+1] = line
+        if line:sub(1, 1) ~= "#" then
+            local key, value = string.match(line, "([%w_]+)=([%w_]+)")
+            if key ~= nil then
+                -- Special entry
+                recipe[key] = value
             else
-                currentList = listName
+                local listName = string.match(line, "([%w_]+):")
+                if listName == nil then
+                    if currentList == nil then
+                        print("Error! Missing list definition")
+                        return
+                    end
+                    recipe[currentList][#recipe[currentList]+1] = line
+                else
+                    currentList = listName
+                end
+                recipe.actions[#recipe.actions+1] = line
             end
-            recipe.actions[#recipe.actions+1] = line
         end
     end
 
@@ -82,6 +84,10 @@ local function interpretLine(context)
         else
             error("Unknown wait parameter '"..arg1.."'")
         end
+    elseif instruction == "pump_in" then
+        control.emptyInputTank()
+    elseif instruction == "pump_out" then
+        control.outputProduct()
     else
         error("Unknown instruction '"..instruction.."'")
     end
