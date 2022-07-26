@@ -29,7 +29,6 @@ local function parseRecipe(file)
                 else
                     currentList = listName
                 end
-                recipe[currentList][#recipe[currentList]+1] = line
             end
         end
     end
