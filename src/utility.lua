@@ -10,16 +10,14 @@ function module.scheduleTimer(time, handler, ...)
     if timers[1] == nil then
         timers[1] = {
             time = time * 20,
-            handlers = {
-                { func = handler, args = {...} }
-            }
+            handlers = { { func = handler, args = {...} } }
         }
         systemTimer = os.startTimer(time)
         timerStartTime = os.clock() * 20
         return
     else
         local clock = os.clock()
-        local timerRunTime = clock * 20 - timerStartTime
+        local timerRunTime = math.floor(clock * 20 - timerStartTime)
         timers[1].time = timers[1].time - timerRunTime
         timerStartTime = clock * 20
         print("Timer changed by "..timerRunTime.." new time "..timers[1].time)
@@ -34,19 +32,14 @@ function module.scheduleTimer(time, handler, ...)
         timeLeft = timeLeft - timer.time
         if timeLeft == 0 then
             -- Append to handler list
-            timer.handlers[#timer.handlers+1] = {
-                func = handler,
-                args = {...}
-            }
+            timer.handlers[#timer.handlers+1] = { func = handler, args = {...} }
         elseif timeLeft < 0 then
             timer.time = timer.time - saveTime
 
             -- Insert an event
             local newTimer = {
                 time = saveTime,
-                handlers = {
-                    { func = handler, args = {...} }
-                }
+                handlers = { { func = handler, args = {...} } }
             }
             table.insert(timers, i, newTimer)
             if i == 1 then
