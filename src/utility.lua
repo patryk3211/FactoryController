@@ -10,13 +10,13 @@ function module.scheduleTimer(time, handler, ...)
     if timers[1] == nil then
         timers[1] = {
             time = time * 20,
-            timeOg = time * 20,
             handlers = { { func = handler, args = {...} } }
         }
         systemTimer = os.startTimer(time)
         timerStartTime = os.clock() * 20
         return
     else
+        -- Don't trust os.clock()
         local clock = os.clock() * 20
         local timerRunTime = math.floor(clock - timerStartTime)
         timers[1].time = timers[1].time - timerRunTime
@@ -44,7 +44,6 @@ function module.scheduleTimer(time, handler, ...)
             -- Insert an event
             local newTimer = {
                 time = saveTime,
-                timeOg = saveTime,
                 handlers = { { func = handler, args = {...} } }
             }
             table.insert(timers, i, newTimer)
@@ -58,7 +57,6 @@ function module.scheduleTimer(time, handler, ...)
     end
     timers[#timers+1] = {
         time = time * 20,
-        timeOg = time * 20,
         handlers = { { func = handler, args = {...} } }
     }
     print("Added at the end")
@@ -69,7 +67,7 @@ function module.handleTimerEvent(eventData)
         return
     end
     local timer = table.remove(timers, 1)
-    print("Firing after "..timer.timeOg.." ticks")
+    print("Firing after "..timer.time.." ticks, actual time "..(os.clock() * 20 - timerStartTime))
     for i = 1, #timer.handlers do
         local handler = timer.handlers[i]
         handler.func(table.unpack(handler.args))

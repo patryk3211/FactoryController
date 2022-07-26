@@ -64,7 +64,7 @@ local function checkIngredientArrived(ingredient, amount, timeout)
             end
         end
     else
-        utility.scheduleTimer((amount - itemCount) * 0.05, checkIngredientArrived, ingredient, amount)
+        utility.scheduleTimer((amount - itemCount - 1) * 0.05, checkIngredientArrived, ingredient, amount)
     end
 
     --if itemCount < amount then
