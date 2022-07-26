@@ -16,11 +16,11 @@ function module.scheduleTimer(time, handler, ...)
         systemTimer = os.startTimer(time)
         timerStartTime = os.clock()
         return
+    else
+        local timerRunTime = os.clock() - timerStartTime
+        timers[1].time = timers[1].time - timerRunTime
+        timerStartTime = os.clock()
     end
-
-    local timerRunTime = os.clock() - timerStartTime
-    timers[1].time = timers[1].time - timerRunTime
-    timerStartTime = os.clock()
 
     local timeLeft = time
     for i = 1, #timers do
