@@ -27,7 +27,7 @@ local function handleElementsTouch(x, y, elements)
                 return true
             end
         elseif e.type == "group" and (e.visible == nil or e.visible == true) then
-            if handleElementsTouch(x - e.x, y - e.y, e.elements) then
+            if handleElementsTouch(x - e.x + 1, y - e.y + 1, e.elements) then
                 return true
             end
         end
@@ -91,7 +91,7 @@ local function drawElements(x, y, elements)
                 display.setCursorPos(x + element.x, y + element.y)
                 display.write(element.text)
             elseif element.type == "group" then
-                drawElements(x + element.x, y + element.y, element.elements)
+                drawElements(x + element.x - 1, y + element.y - 1, element.elements)
             end
         end
     end
