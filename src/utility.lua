@@ -6,9 +6,10 @@ local systemTimer = 0
 local timerStartTime = 0
 
 function module.scheduleTimer(time, handler, ...)
+    print("Scheduling for "..(time * 20).." ticks")
     if timers[1] == nil then
         timers[1] = {
-            time = time,
+            time = time * 20,
             handlers = {
                 { func = handler, args = {...} }
             }
@@ -17,12 +18,13 @@ function module.scheduleTimer(time, handler, ...)
         timerStartTime = os.clock()
         return
     else
-        local timerRunTime = os.clock() - timerStartTime
-        timers[1].time = timers[1].time - timerRunTime
-        timerStartTime = os.clock()
+        local timerRunTime = os.clock() * 20 - timerStartTime
+        timers[1].time = (timers[1].time * 20 - timerRunTime) / 20
+        timerStartTime = os.clock() * 20
+        print("Timer changed by "..timerRunTime.." new time "..timers[1].time)
     end
 
-    local timeLeft = time
+    local timeLeft = time * 20
     for i = 1, #timers do
         local timer = timers[i]
 
@@ -58,13 +60,14 @@ function module.handleTimerEvent(eventData)
         return
     end
     local timer = table.remove(timers, 1)
+    print("Firing after "..timer.." ticks")
     for i = 1, #timer.handlers do
         local handler = timer.handlers[i]
         handler.func(table.unpack(handler.args))
     end
     if timers[1] ~= nil then
-        systemTimer = os.startTimer(timers[1].time)
-        timerStartTime = os.clock()
+        systemTimer = os.startTimer(timers[1].time / 20)
+        timerStartTime = os.clock() * 20
     end
 end
 
