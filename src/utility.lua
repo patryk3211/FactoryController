@@ -35,7 +35,7 @@ function module.scheduleTimer(time, handler, ...)
         if timeLeft == 0 then
             -- Append to handler list
             timer.handlers[#timer.handlers+1] = { func = handler, args = {...} }
-            break
+            return
         elseif timeLeft < 0 then
             timer.time = timer.time - saveTime
 
@@ -49,9 +49,13 @@ function module.scheduleTimer(time, handler, ...)
                 os.cancelTimer(systemTimer)
                 systemTimer = os.startTimer(time)
             end
-            break
+            return
         end
     end
+    timers[#timers+1] = {
+        time = time * 20,
+        handlers = { { func = handler, args = {...} } }
+    }
 end
 
 function module.handleTimerEvent(eventData)
