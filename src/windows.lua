@@ -1,7 +1,7 @@
 local module = {}
 
 local display = nil
-local elements = {}
+local currentWindow = {}
 
 function module.start()
     display = peripheral.find("monitor")
@@ -14,35 +14,44 @@ function module.start()
     display.write("Loading...")
 end
 
-function module.handleTouch(eventData)
-    local x, y = eventData[3], eventData[4]
-    for name, e in pairs(elements) do
-        if e.type == "button" then
+local function handleElementsTouch(x, y, elements)
+    local i = #elements.order
+    while i >= 1 do
+        -- Check elements from the "top"
+        local e = elements[elements.order[i]]
+        if e.type == "button" and (e.visible == nil or e.visible == true) and (e.enabled == nil or e.enabled == true) then
             if x >= e.x and y >= e.y and x < e.x + e.width and y < e.y + e.height then
                 if e.handler ~= nil then
-                    e.handler()
+                    e.handler(currentWindow)
                 end
-                break
+                return true
+            end
+        elseif e.type == "group" and (e.visible == nil or e.visible == true) then
+            if handleElementsTouch(x - e.x, y - e.y, e.elements) then
+                return true
             end
         end
+        i = i - 1
     end
+    return false
 end
 
-function module.addButton(name, x, y, width, height, text, fg, bg, clickHandler)
-    elements[name] = { type = "button", x = x, y = y, width = width, height = height, text = text, fg = fg, bg = bg, handler = clickHandler }
+function module.handleTouch(eventData)
+    local x, y = eventData[3], eventData[4]
+    handleElementsTouch(x, y, currentWindow)
 end
 
-function module.setGui(elmnt)
-    elements = elmnt
+function module.setGui(window)
+    currentWindow = window
     module.redraw()
 end
 
 function module.remove(name)
-    elements[name] = nil
+    currentWindow[name] = nil
 end
 
 function module.clear()
-    elements = {}
+    currentWindow = {}
 end
 
 local function box(x, y, width, height)
@@ -56,33 +65,43 @@ local function box(x, y, width, height)
     end
 end
 
+local function drawElements(x, y, elements)
+    for i, id in ipairs(elements.order) do
+        local element = elements[id]
+        if element.visible == nil or element.visible == true then
+            if element.type == "button" then
+                if element.fg ~= nil then
+                    display.setTextColor(element.fg)
+                end
+                display.setBackgroundColor(element.bg)
+
+                box(x + element.x, y + element.y, element.width, element.height)
+
+                local textOffset = (element.width - element.text:len()) / 2
+                display.setCursorPos(x + element.x + textOffset, y + element.y + element.height / 2)
+                display.write(element.text)
+            elseif element.type == "panel" then
+                display.setBackgroundColor(element.color)
+
+                box(x + element.x, y + element.y, element.width, element.height)
+            elseif element.type == "text" then
+                display.setTextColor(element.fg)
+                display.setBackgroundColor(element.bg)
+
+                display.setCursorPos(x + element.x, y + element.y)
+                display.write(element.text)
+            elseif element.type == "group" then
+                drawElements(x + element.x, y + element.y, element.elements)
+            end
+        end
+    end
+end
+
 function module.redraw()
     display.setBackgroundColor(colors.lightGray)
     display.clear()
 
-    for i, id in ipairs(elements.order) do
-        local element = elements[id]
-        if element.type == "button" then
-            display.setTextColor(element.fg)
-            display.setBackgroundColor(element.bg)
-
-            box(element.x, element.y, element.width, element.height)
-
-            local textOffset = (element.width - element.text:len()) / 2
-            display.setCursorPos(element.x + textOffset, element.y + element.height / 2)
-            display.write(element.text)
-        elseif element.type == "panel" then
-            display.setBackgroundColor(element.color)
-
-            box(element.x, element.y, element.width, element.height)
-        elseif element.type == "text" then
-            display.setTextColor(element.fg)
-            display.setBackgroundColor(element.bg)
-
-            display.setCursorPos(element.x, element.y)
-            display.write(element.text)
-        end
-    end
+    drawElements(0, 0, currentWindow)
 end
 
 return module

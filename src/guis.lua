@@ -43,7 +43,7 @@ function module.recipes()
             if y % 2 == 0 then
                 color = colors.white
             end
-            recipeScreen[id.."_button"] = { type = "button", x = 1, y = y, height = 1, width = 39, fg = colors.black, bg = color, text = "", handler = function()
+            recipeScreen[id.."_button"] = { type = "button", x = 1, y = y, height = 1, width = 39, bg = color, text = "", handler = function()
                 print("Selected '"..id.."' recipe")
                 state.recipe = id;
                 windows.setGui(module.start())
@@ -68,15 +68,32 @@ function module.recipes()
     return recipeScreen
 end
 
+local function selectIngredient(name, window)
+    window.item_ingredient_group.visible = false
+end
+
 module.manualControl = {
-    order = { "top_bar", "button_back", "top_bar_text", "button_spin_basin" },
+    order = { "top_bar", "button_back", "top_bar_text", "button_spin_basin", "item_ingredient_group" },
     top_bar = { type = "panel", x = 1, y = 1, height = 1, width = 39, color = colors.blue },
     button_back = { type = "button", x = 39-3, y = 1, height = 1, width = 4, bg = colors.red, fg = colors.white, text = "Back", handler = function ()
         windows.setGui(module.start())
     end},
-    top_bar_text = { type = "text", x = 1, y = 1, height = 1, width = 39, fg = colors.black, bg = colors.blue, text = "Manual Control" },
-    button_spin_basin = { type = "button", x = 2, y = 3, height = 3, width = 19, fg = colors.white, bg = colors.gray, text = "Spin Basins", handler = function ()
+    top_bar_text = { type = "text", x = 1, y = 1, height = 1, width = 39, bg = colors.blue, text = "Manual Control" },
+    button_spin_basin = { type = "button", x = 2, y = 3, height = 3, width = 18, fg = colors.white, bg = colors.gray, text = "Spin Basins", handler = function ()
         control.spinBasins()
+    end},
+    item_ingredient_group = { type = "group", x = 20, y = 4, visible = false, elements = {
+        order = { "top_bar", "top_bar_text" },
+        top_bar = { type = "panel", x = 1, y = 1, width = 13, height = 1, color = colors.blue },
+        top_bar_text = { type = "text", x = 1, y = 1, bg = colors.blue, fg = color.white, text = "Ingredients" },
+        panel = { type = "panel", x = 1, y = 2, width = 13, height = 4, color = colors.white },
+        sugar_button = { type = "button", x = 1, y = 3, width = 5, height = 1, text = "Sugar", handler = function (window) selectIngredient("sugar", window) end },
+        beans_button = { type = "button", x = 1, y = 4, width = 11, height = 1, text = "Cocoa Beans", handler = function (window) selectIngredient("cocoa_beans", window) end },
+        powder_button = { type = "button", x = 1, y = 5, width = 12, height = 1, text = "Cocoa Powder", handler = function (window) selectIngredient("cocoa_powder", window) end },
+        butter_button = { type = "button", x = 1, y = 6, width = 12, height = 1, text = "Cocoa Butter", handler = function (window) selectIngredient("cocoa_butter", window) end }
+    } },
+    button_prepare_ingredient = { type = "button", x = 19, y = 3, height = 3, width = 18, fg = colors.white, bg = colors.gray, text = "Ingredient", handler = function (window)
+        window.item_ingredient_group.visible = true
     end}
 }
 

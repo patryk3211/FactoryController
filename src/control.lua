@@ -45,6 +45,7 @@ local function checkIngredientArrived(ingredient, amount, timeout)
 
     if timeout > 200 then
         state.error = "Failed to prepare "..amount.." "..ingredient..", timed out"
+        print("Failed to prepare "..amount.." "..ingredient..", timed out")
         return
     end
 
@@ -123,7 +124,8 @@ local function waitForLiquid(name, timeout)
         redstoneMgr.setOutput("fill_"..name, false)
     else
         if timeout > 100 then
-            state.error("Failed to prepare "..name..", timed out")
+            state.error = "Failed to prepare "..name..", timed out"
+            print("Failed to prepare "..name..", timed out")
             return
         end
         utility.scheduleTimer(0.1, waitForLiquid, name, timeout + 1)
