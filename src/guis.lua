@@ -78,8 +78,13 @@ local function selectFluid(name, window)
     control.prepareLiquid(name)
 end
 
+local function selectOutput(name, window)
+    window.output_tank_group.visible = false
+    control.setOutputTank(name)
+end
+
 module.manualControl = {
-    order = { "top_bar", "button_back", "top_bar_text", "button_spin_basin", "button_prepare_ingredient", "item_ingredient_group", "button_prepare_liquid", "fluid_ingredient_group" },
+    order = { "top_bar", "button_back", "top_bar_text", "button_spin_basin", "button_prepare_ingredient", "item_ingredient_group", "button_prepare_liquid", "fluid_ingredient_group", "output_tank_group", "button_output_select" },
     top_bar = { type = "panel", x = 1, y = 1, height = 1, width = 39, color = colors.blue },
     button_back = { type = "button", x = 39-3, y = 1, height = 1, width = 4, bg = colors.red, fg = colors.white, text = "Back", handler = function ()
         windows.setGui(module.start())
@@ -111,6 +116,20 @@ module.manualControl = {
     } },
     button_prepare_liquid = { type = "button", x = 2, y = 7, height = 3, width = 18, fg = colors.white, bg = colors.gray, text = "Base Fluid", handler = function (window)
         window.fluid_ingredient_group.visible = true
+    end},
+    output_tank_group = { type = "group", x = 22, y = 8, visible = false, elements = {
+        order = { "top_bar", "top_bar_text", "panel", "chocolate_button", "caramel_button", "white_chocolate_button", "dark_chocolate_button", "hot_chocolate_button" },
+        top_bar = { type = "panel", x = 1, y = 1, width = 17, height = 1, color = colors.blue },
+        top_bar_text = { type = "text", x = 1, y = 1, bg = colors.blue, fg = colors.white, text = "Output Tanks" },
+        panel = { type = "panel", x = 1, y = 2, width = 17, height = 5, color = colors.white },
+        chocolate_button = { "button", x = 1, y = 2, width = 11, height = 1, bg = color.white, fg = color.black, text = "Chocolate", handler = function (window) selectOutput("chocolate", window) end },
+        caramel_button = { "button", x = 1, y = 3, width = 11, height = 1, bg = color.white, fg = color.black, text = "Caramel", handler = function (window) selectOutput("caramel", window) end },
+        white_chocolate_button = { "button", x = 1, y = 4, width = 11, height = 1, bg = color.white, fg = color.black, text = "White Chocolate", handler = function (window) selectOutput("white_chocolate", window) end },
+        dark_chocolate_button = { "button", x = 1, y = 5, width = 11, height = 1, bg = color.white, fg = color.black, text = "Dark Chocolate", handler = function (window) selectOutput("dark_chocolate", window) end },
+        hot_chocolate_button = { "button", x = 1, y = 6, width = 11, height = 1, bg = color.white, fg = color.black, text = "Hot Chocolate", handler = function (window) selectOutput("hot_chocolate", window) end }
+    } },
+    button_output_select = { type = "button", x = 21, y = 7, height = 3, width = 18, fg = colors.white, bg = colors.gray, text = "Output Tank", handler = function (window)
+        window.output_tank_group.visible = true
     end}
 }
 
