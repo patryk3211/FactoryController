@@ -16,12 +16,14 @@ function module.scheduleTimer(time, handler, ...)
         timerStartTime = os.clock() * 20
         return
     else
-        local clock = os.clock()
-        local timerRunTime = math.floor(clock * 20 - timerStartTime)
+        local clock = os.clock() * 20
+        local timerRunTime = math.floor(clock - timerStartTime)
         timers[1].time = timers[1].time - timerRunTime
-        timerStartTime = clock * 20
+        if timers[1].time < 0 then
+            timers[1].time = 0
+        end
+        timerStartTime = clock
         print("Timer changed by "..timerRunTime.." new time "..timers[1].time)
-        print("Clock "..clock)
     end
 
     local timeLeft = time * 20
@@ -33,6 +35,7 @@ function module.scheduleTimer(time, handler, ...)
         if timeLeft == 0 then
             -- Append to handler list
             timer.handlers[#timer.handlers+1] = { func = handler, args = {...} }
+            break
         elseif timeLeft < 0 then
             timer.time = timer.time - saveTime
 
@@ -46,6 +49,7 @@ function module.scheduleTimer(time, handler, ...)
                 os.cancelTimer(systemTimer)
                 systemTimer = os.startTimer(time)
             end
+            break
         end
     end
 end
