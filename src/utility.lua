@@ -41,7 +41,7 @@ function module.scheduleTimer(time, handler, ...)
                     { func = handler, args = {...} }
                 }
             }
-            timers:insert(i, newTimer)
+            table.insert(timers, i, newTimer)
             if i == 1 then
                 local timerRunTime = os.clock() - timerStartTime
                 os.cancelTimer(systemTimer)
@@ -57,7 +57,7 @@ function module.handleTimerEvent(eventData)
     --local handler = timerScheduled[eventData[2]]
     --timerScheduled[eventData[2]] = nil
     --handler.handler(table.unpack(handler.args))
-    local timer = timers:remove(1)
+    local timer = table.remove(timers, 1)
     for i = 1, #timer.handlers do
         local handler = timer.handlers[i]
         handler.func(table.unpack(handler.args))
