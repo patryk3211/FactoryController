@@ -31,6 +31,11 @@ while running do
         windows.redraw()
     elseif event == "start_recipe" then
         recipeContext = recipes.startRecipe(state.recipe)
+    elseif event == "stop_recipe" then
+        recipeContext.stop = true
+    elseif event == "recipe_stopped" then
+        recipeContext = nil
+        windows.setGui(guis.start())
     elseif event == "control" then
         recipes.handleControlEvent(eventData)
     end

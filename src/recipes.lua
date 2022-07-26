@@ -94,6 +94,10 @@ local function interpretLine(context)
 end
 
 local function interpret(context)
+    if context.stop then
+        os.queueEvent("recipe_stopped")
+        return
+    end
     for i = 1, 8 do
         local result = { interpretLine(context) }
         context.current_line = context.current_line + 1
@@ -135,7 +139,8 @@ function module.startRecipe(recipeId)
     local context = {
         recipe = recipes[recipeId],
         current_list = "init",
-        current_line = 1
+        current_line = 1,
+        stop = false
     }
 
     utility.scheduleTimer(0.05, interpret, context)
