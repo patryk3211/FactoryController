@@ -3,6 +3,7 @@ local module = {}
 local recipeMgr = require("recipes")
 local windows = require("windows")
 local state = require("state")
+local control = require("control")
 
 function module.start()
     return {
@@ -11,7 +12,7 @@ function module.start()
         button_select_recipe = { type = "button", x = 11, y = 9, width = 19, height = 5, text = "Select Recipe", fg = colors.white, bg = colors.gray, handler = function ()
             windows.setGui(module.recipes())
         end},
-        button_manual = { type = "button", x = 13, y = 15, width = 15, height = 3, text = "Manual", fg = colors.white, bg = colors.gray, function ()
+        button_manual = { type = "button", x = 13, y = 15, width = 15, height = 3, text = "Manual", fg = colors.white, bg = colors.gray, handler = function ()
             windows.setGui(module.manualControl)
         end},
         top_bar = { type = "panel", x = 1, y = 1, height = 1, width = 39, color = colors.blue },
@@ -68,10 +69,14 @@ function module.recipes()
 end
 
 module.manualControl = {
-    order = {},
+    order = { "top_bar", "button_back", "top_bar_text" },
     top_bar = { type = "panel", x = 1, y = 1, height = 1, width = 39, color = colors.blue },
-    button_back = { type = "button", x = 39-4, y = 1, height = 1, width = 4, bg = colors.red, fg = color.white, text = "Back", handler = function ()
+    button_back = { type = "button", x = 39-3, y = 1, height = 1, width = 4, bg = colors.red, fg = colors.white, text = "Back", handler = function ()
         windows.setGui(module.start())
+    end},
+    top_bar_text = { type = "text", x = 1, y = 1, height = 1, width = 39, fg = colors.black, bg = colors.blue, text = "Manual Control" },
+    button_spin_basin = { type = button, x = 2, y = 3, height = 3, width = 19, fg = colors.white, bg = colors.gray, text = "Spin Basins", handler = function ()
+        control.spinBasins()
     end}
 }
 
