@@ -54,29 +54,29 @@ local function checkIngredientArrived(ingredient, amount, timeout)
     local itemCount = data.handler.BigItems["0"].Amount
 
     -- If the lower code is unreliable then this might fix it
-    --if itemCount >= amount - ingredientTransferRate * 2 then
-    --    while true do
-    --        itemCount = reader.getBlockData().handler.BigItems["0"].Amount
-    --        if itemCount >= amount then
-    --            redstoneMgr.setOutput(ingredient.."-transfer", false)
-    --            redstoneMgr.pulse(ingredient.."-output")
-    --            break
-    --        end
-    --    end
-    --else
-    --    utility.scheduleTimer(0.05, checkIngredientArrived, ingredient, amount)
-    --end
-
-    if itemCount < amount then
-        utility.scheduleTimer(0.05, checkIngredientArrived, ingredient, amount, timeout + 1)
+    if itemCount >= amount - ingredientTransferRate * 2 then
+        while true do
+            itemCount = reader.getBlockData().handler.BigItems["0"].Amount
+            if itemCount >= amount then
+                redstoneMgr.setOutput(ingredient.."-transfer", false)
+                redstoneMgr.pulse(ingredient.."-output")
+                break
+            end
+        end
     else
-        redstoneMgr.setOutput(ingredient.."-transfer", false)
-        redstoneMgr.pulse(ingredient.."-output")
-        utility.scheduleTimer(2, function ()
-            activeProcesses = activeProcesses - 1
-            os.queueEvent("control", "ingredient_arrived", ingredient)
-        end)
+        utility.scheduleTimer(0.05, checkIngredientArrived, ingredient, amount)
     end
+
+    --if itemCount < amount then
+    --    utility.scheduleTimer(0.05, checkIngredientArrived, ingredient, amount, timeout + 1)
+    --else
+    --    redstoneMgr.setOutput(ingredient.."-transfer", false)
+    --    redstoneMgr.pulse(ingredient.."-output")
+    --    utility.scheduleTimer(2, function ()
+    --        activeProcesses = activeProcesses - 1
+    --        os.queueEvent("control", "ingredient_arrived", ingredient)
+    --    end)
+    --end
 end
 
 function module.outputIngredient(ingredient, amount)
