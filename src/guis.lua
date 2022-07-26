@@ -123,7 +123,7 @@ module.manualControl = {
         top_bar_text = { type = "text", x = 1, y = 1, bg = colors.blue, fg = colors.white, text = "Output Tanks" },
         panel = { type = "panel", x = 1, y = 2, width = 17, height = 5, color = colors.white },
         chocolate_button = { type = "button", x = 1, y = 2, width = 11, height = 1, bg = colors.white, fg = colors.black, text = "Chocolate", handler = function (window) selectOutput("chocolate", window) end },
-        caramel_button = { type = "button", x = 1, y = 3, width = 11, height = 1, bg = colors.white, fg = colors.black, text = "Caramel", handler = function (window) selectOutput("caramel", window) end },
+        caramel_button = { type = "button", x = 1, y = 3, width = 9, height = 1, bg = colors.white, fg = colors.black, text = "Caramel", handler = function (window) selectOutput("caramel", window) end },
         white_chocolate_button = { type = "button", x = 1, y = 4, width = 17, height = 1, bg = colors.white, fg = colors.black, text = "White Chocolate", handler = function (window) selectOutput("white_chocolate", window) end },
         dark_chocolate_button = { type = "button", x = 1, y = 5, width = 16, height = 1, bg = colors.white, fg = colors.black, text = "Dark Chocolate", handler = function (window) selectOutput("dark_chocolate", window) end },
         hot_chocolate_button = { type = "button", x = 1, y = 6, width = 15, height = 1, bg = colors.white, fg = colors.black, text = "Hot Chocolate", handler = function (window) selectOutput("hot_chocolate", window) end }
