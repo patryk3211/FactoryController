@@ -29,7 +29,7 @@ local function parseRecipe(file)
                 else
                     currentList = listName
                 end
-                recipe.actions[#recipe.actions+1] = line
+                recipe[currentList][#recipe[currentList]+1] = line
             end
         end
     end
