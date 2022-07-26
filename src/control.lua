@@ -68,7 +68,7 @@ local function checkIngredientArrived(ingredient, amount)
         redstoneMgr.pulse(ingredient.."-output")
         utility.scheduleTimer(2, function ()
             activeProcesses = activeProcesses - 1
-            os.queueEvent("ingredient_arrived", ingredient)
+            os.queueEvent("control", "ingredient_arrived", ingredient)
         end)
     end
 end
@@ -86,6 +86,13 @@ function module.spinBasins()
         state.basinPosition = (state.basinPosition + 1) % 4
         if state.basinPosition ~= 0 then
             redstoneMgr.pulse("dispenser_"..state.basinPosition)
+            utility.scheduleTimer(1, function ()
+                os.queueEvent("control", "basin_ready")
+                activeProcesses = activeProcesses - 1
+            end)
+        else
+            os.queueEvent("control", "basin_ready")
+            activeProcesses = activeProcesses - 1
         end
     end)
 end
@@ -100,14 +107,14 @@ function module.setOutputTank(chocolate)
     state.activeValve = newValve
     utility.scheduleTimer(1, function ()
         activeProcesses = activeProcesses - 1
-        os.queueEvent("valve_switched", newValve)
+        os.queueEvent("control", "valve_switched", newValve)
     end)
 end
 
 local function waitForLiquid(name)
     if redstoneMgr.getInput("liquid_ready") then
         activeProcesses = activeProcesses - 1
-        os.queueEvent("liquid_ready")
+        os.queueEvent("control", "liquid_ready")
         redstoneMgr.setOutput("fill_"..name, false)
     else
         utility.scheduleTimer(0.1, waitForLiquid, name)
@@ -123,7 +130,7 @@ end
 local function waitInputTankEmpty()
     if redstoneMgr.getInput("liquid_empty") then
         activeProcesses = activeProcesses - 1
-        os.queueEvent("liquid_empty")
+        os.queueEvent("control", "liquid_empty")
     else
         utility.scheduleTimer(0.1, waitInputTankEmpty)
     end
@@ -137,7 +144,7 @@ end
 local function waitPumpOutEnd()
     if redstoneMgr.getInput("output_tank_empty") then
         activeProcesses = activeProcesses - 1
-        os.queueEvent("output_tank_empty")
+        os.queueEvent("control", "output_tank_empty")
     else
         utility.scheduleTimer(0.1, waitPumpOutEnd)
     end
@@ -146,7 +153,7 @@ end
 local function waitPumpOutStart(timeout)
     if timeout >= 100 then
         activeProcesses = activeProcesses - 1
-        os.queueEvent("output_tank_empty")
+        os.queueEvent("control", "output_tank_empty")
         print("Product pump out timed out trying to start")
     end
 
