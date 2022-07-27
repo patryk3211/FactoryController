@@ -91,7 +91,10 @@ function module.spinBasins()
     utility.scheduleTimer(1.5, function ()
         state.basinPosition = (state.basinPosition + 1) % 4
         if state.basinPosition ~= 0 then
-            redstoneMgr.pulse("dispenser_"..state.basinPosition)
+            redstoneMgr.setOutput("dispenser_"..state.basinPosition, true)
+            utility.scheduleTimer(0.2, function ()
+                redstoneMgr.setOutput("dispenser_"..state.basinPosition, false)
+            end)
             utility.scheduleTimer(1, function ()
                 os.queueEvent("control", "basin_ready")
                 activeProcesses = activeProcesses - 1
