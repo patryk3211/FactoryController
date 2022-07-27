@@ -14,6 +14,11 @@ function module.start()
     display.write("Loading...")
 end
 
+function module.shutdown()
+    display.setBackgroundColor(colors.black)
+    display.clear()
+end
+
 local function handleElementsTouch(x, y, elements)
     local i = #elements.order
     while i >= 1 do

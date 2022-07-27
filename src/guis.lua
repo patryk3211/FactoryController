@@ -21,6 +21,7 @@ function module.start()
         top_bar = { type = "panel", x = 1, y = 1, height = 1, width = 39, color = colors.blue },
         top_bar_text = { type = "text", x = 1, y = 1, height = 1, width = 39, fg = colors.black, bg = colors.blue, text = "Recipe: "..recipeMgr.recipes()[state.recipe].name },
         button_shutdown = { type = "button", x = 39 - 7, y = 1, height = 1, width = 8, fg = colors.white, bg = colors.red, text = "Shutdown", handler = function ()
+            windows.shutdown()
             os.shutdown()
         end},
         button_update = { type = "button", x = 39 - 14, y = 1, height = 1, width = 6, fg = colors.white, bg = colors.green, text = "Update", handler = function ()
