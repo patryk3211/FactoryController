@@ -1,5 +1,6 @@
 local control = require "control"
 local utility = require "utility"
+local redstone= require "redstone"
 local module = {}
 
 local recipes = {}
@@ -142,6 +143,15 @@ function module.handleControlEvent(eventData)
     end
 end
 
+local function homeBasins()
+    if redstone.getInput("basin_sensor") then
+        utility.scheduleTimer(0.05, interpret, currentContext)
+    else
+        control.spinBasins()
+        utility.scheduleTimer(1.2, homeBasins)
+    end
+end
+
 function module.startRecipe(recipeId)
     local context = {
         recipe = recipes[recipeId],
@@ -150,8 +160,8 @@ function module.startRecipe(recipeId)
         stop = false
     }
 
-    utility.scheduleTimer(0.05, interpret, context)
     currentContext = context;
+    homeBasins()
 
     return context
 end

@@ -1,36 +1,46 @@
-local rootPath = "https://raw.githubusercontent.com/patryk3211/FactoryController/master/src/"
-local files = { "config.lua", "redstone.lua", "main.lua", "utility.lua", "windows.lua", "control.lua", "guis.lua", "state.lua", "recipes.lua" }
+local rootPath = "https://raw.githubusercontent.com/patryk3211/FactoryController/master/"
+local files = { "config.lua", "redstone.lua", "main.lua", "utility.lua", "windows.lua", "control.lua", "guis.lua", "state.lua", "recipes.lua", "updater.lua" }
+local recipes = { "chocolate.rec" }
 
 local installRoot = "/controller/"
+
+local function downloadFile(file)
+    shell.execute("wget", rootPath..file)
+end
 
 fs.delete(installRoot)
 fs.makeDir(installRoot)
 shell.setDir(installRoot)
 
 for i, file in ipairs(files) do
-    shell.execute("wget", rootPath..file)
+    downloadFile("src/"..file)
 end
 
 print("Files downloaded successfully")
 
 -- Create config dir
-fs.makeDir(shell.resolve("config"))
+fs.makeDir(installRoot.."config")
 
--- Make example config
-local mapFile = io.open(shell.resolve("config/mappings.conf"), "w+")
-mapFile:write("# This file should contain the mappings for redstone signals in the following format:\n# <Mapping Name> <Peripheral ID>/<Side>:<Bit>\n")
-mapFile:write("sugar-transfer\nsugar-output\nbasin_control\n");
-mapFile:close()
+-- Download configs
+shell.setDir(installRoot.."config")
+downloadFile("mappings.conf")
 
-local controlConfFile = io.open(shell.resolve("config/control.conf"), "w+")
+local controlConfFile = io.open(installRoot.."config/control.conf", "w+")
 controlConfFile:write("ingredientTransferRate = 1\n")
 controlConfFile:write("blockReaders = blockReader_0:sugar;blockReader_1:cocoa_beans,cocoa_powder;blockReader_2:cocoa_butter")
 controlConfFile:close()
 
-print("Configs generated")
+print("Configs ready")
 
-fs.makeDir(shell.resolve("recipes"))
+fs.makeDir(installRoot.."recipes")
+shell.setDir(installRoot.."recipes")
+for i, file in ipairs(recipes) do
+    downloadFile("src/recipes/"..file)
+end
 
-print("Recipes folder created")
+print("Recipes downloaded")
+
+shell.setDir(installRoot)
+downloadFile("version")
 
 print("Install complete")
