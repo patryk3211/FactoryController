@@ -43,6 +43,7 @@ function module.handleTimerEvent(eventData)
             local handler = firstTimer.handlers[i]
             handler.func(table.unpack(handler.args))
         end
+        table.remove(timers, 1)
     end
 
     systemTimer = os.startTimer(0.05)
