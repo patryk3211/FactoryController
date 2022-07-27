@@ -166,6 +166,7 @@ local function waitPumpOutStart(timeout)
         activeProcesses = activeProcesses - 1
         os.queueEvent("control", "output_tank_empty")
         print("Product pump out timed out trying to start, might have been empty")
+        return
     end
 
     if redstoneMgr.getInput("output_tank_empty") then
