@@ -40,7 +40,9 @@ end
 local function checkIngredientArrived(timeout)
     local toRemove = {}
 
+    local count = nil
     for i = 1, 3 do
+        count = 0
         for ingredient, check in pairs(ingredientCheckList) do
             local itemCount = check.reader.getBlockData().handler.BigItems["0"].Amount
 
@@ -53,14 +55,17 @@ local function checkIngredientArrived(timeout)
                     os.queueEvent("control", "ingredient_arrived", ingredient)
                 end)
             end
+
+            count = count + 1
         end
     end
 
     for i = 1, #toRemove do
         ingredientCheckList[toRemove[i]] = nil
+        count = count - 1
     end
 
-    if #ingredientCheckList > 0 then
+    if count > 0 then
         utility.scheduleTimer(0.05, checkIngredientArrived, 0)
     end
 end
