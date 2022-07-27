@@ -84,6 +84,10 @@ if localVersion ~= remoteVersion then
 
         sleep(0.1)
     end
+
+    versionFile = io.open("/controller/version", "w+")
+    versionFile:write(remoteVersion)
+    versionFile:close()
 else
     display.clear()
     writeText("Up to date!", 0)
