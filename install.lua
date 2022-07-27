@@ -45,7 +45,7 @@ downloadFile("version")
 
 print("Adding to startup")
 fs.makeDir("/startup")
-local starterFile = io.open("/startup/controllerStart", "w+")
+local starterFile = io.open("/startup/controllerStart.lua", "w+")
 starterFile:write("shell.setDir(\"/controller\")\nshell.execute(\"main\")")
 starterFile:close()
 
