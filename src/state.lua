@@ -1,6 +1,6 @@
 local state = {}
 
-state.recipe = "chocolate"
+state.recipe = nil
 state.activeValve = nil
 state.basinPosition = 0
 state.error = nil

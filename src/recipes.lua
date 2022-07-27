@@ -1,6 +1,7 @@
 local control = require "control"
 local utility = require "utility"
 local redstone= require "redstone"
+local state   = require "state"
 local module = {}
 
 local recipes = {}
@@ -145,6 +146,7 @@ end
 
 local function homeBasins()
     if redstone.getInput("basin_sensor") then
+        state.basinPosition = 0
         utility.scheduleTimer(0.05, interpret, currentContext)
     else
         control.spinBasins()
