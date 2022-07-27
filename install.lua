@@ -43,4 +43,10 @@ print("Recipes downloaded")
 shell.setDir(installRoot)
 downloadFile("version")
 
+print("Adding to startup")
+fs.makeDir("/startup")
+local starterFile = io.open("/startup/controllerStart", "w+")
+starterFile:write("shell.setDir(\"/controller\")\nshell.execute(\"main\")")
+starterFile:close()
+
 print("Install complete")

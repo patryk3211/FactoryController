@@ -9,7 +9,7 @@ local displayWidth, displayHeight = display.getSize()
 
 local function writeText(text, yOffset)
     local textLength = text:len()
-    display.setCursorPos(displayWidth / 2 - textLength / 2, displayHeight / 2 + yOffset)
+    display.setCursorPos(1 + displayWidth / 2 - textLength / 2, displayHeight / 2 + yOffset)
     display.write(text)
 end
 
@@ -18,23 +18,21 @@ local function writeProgressBar(value, maxValue, width, yOffset)
     local fraction = value / maxValue
     local filledSize = math.floor((width - 2) * fraction)
 
-    local filledText = ""
-    local emptyText = ""
+    local text = ""
 
     for i = 1, filledSize do
-        filledText = filledText.." "
+        text = text.."#"
     end
 
     for i = 1, width - 2 - filledSize do
-        emptyText = emptyText.." "
+        text = text.." "
     end
 
-    display.setCursorPos(displayWidth / 2 - width / 2, displayHeight / 2 + yOffset)
+    display.setCursorPos(1 + displayWidth / 2 - width / 2, displayHeight / 2 + yOffset)
     display.write("[")
-    display.setBackgroundColor(colors.white)
-    display.write(filledText)
-    display.setBackgroundColor(colors.lightGray)
-    display.write(emptyText)
+    display.setTextColor(colors.white)
+    display.write(text)
+    display.setTextColor(colors.gray)
     display.write("]")
 end
 
@@ -43,6 +41,7 @@ local website = "https://raw.githubusercontent.com/patryk3211/FactoryController/
 
 display.clear()
 writeText("Checking version", 0)
+sleep(1)
 
 local function readRemoteFile(file)
     local response = http.get(website..file)
@@ -65,12 +64,34 @@ if localVersion ~= remoteVersion then
     writeText("Updating to version "..remoteVersion, 0)
     sleep(2)
 
-    for i = 0, 20 do
-        writeProgressBar(i, 20, 22, 1)
-        sleep(1)
-    end
+    local progressMax = #filesToUpdate
 
+    for i = 1, progressMax do
+        display.clear()
+        writeText("Updating...", -1)
+        writeText("Please do not turn off your computer", 0)
+        writeProgressBar(i, progressMax, 22, 1)
+
+        local filename = filesToUpdate[i]
+
+        writeText("Downloading "..filename, 2)
+        local remote = readRemoteFile("src/"..filename)
+        if remote ~= nil then
+            local file = io.open("/controller/"..filename, "w+")
+            file:write(remote)
+            file:close()
+        end
+
+        sleep(0.1)
+    end
 else
+    display.clear()
     writeText("Up to date!", 0)
     sleep(2)
 end
+
+display.clear()
+writeText("Rebooting", 0)
+sleep(2)
+
+os.reboot()
