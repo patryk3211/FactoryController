@@ -23,7 +23,7 @@ function module.start()
         button_shutdown = { type = "button", x = 39 - 7, y = 1, height = 1, width = 8, fg = colors.white, bg = colors.red, text = "Shutdown", handler = function ()
             os.shutdown()
         end},
-        button_update = { type = "button", x = 39 - 13, y = 1, height = 1, width = 6, fg = colors.white, bg = colors.green, text = "Update", handler = function ()
+        button_update = { type = "button", x = 39 - 14, y = 1, height = 1, width = 6, fg = colors.white, bg = colors.green, text = "Update", handler = function ()
             shell.execute("updater")
         end}
     }
