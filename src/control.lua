@@ -86,7 +86,7 @@ function module.spinBasins()
         state.basinPosition = (state.basinPosition + 1) % 4
         if state.basinPosition ~= 0 then
             redstoneMgr.setOutput("dispenser_"..state.basinPosition, true)
-            utility.scheduleTimer(0.2, function ()
+            utility.scheduleTimer(0.3, function ()
                 redstoneMgr.setOutput("dispenser_"..state.basinPosition, false)
             end)
             utility.scheduleTimer(1, function ()
