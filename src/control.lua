@@ -10,6 +10,7 @@ local ingredientTransferRate = 1
 local ingredientReaderMap = {}
 
 local activeProcesses = 0
+local ingredientCheckList = {}
 
 function module.loadConfig()
     controlConfig = config.loadConfig(shell.resolve("config/control.conf"), "values")
@@ -36,36 +37,52 @@ function module.loadConfig()
     print("Ingredient Transfer Rate = "..ingredientTransferRate)
 end
 
-local function checkIngredientArrived(ingredient, amount, timeout)
-    local reader = ingredientReaderMap[ingredient]
-    if reader == nil then
-        error("An unknown ingredient was requested")
-        return
-    end
-
+local function checkIngredientArrived(timeout)
     if timeout > 200 then
         state.error = "Failed to prepare "..amount.." "..ingredient..", timed out"
         print("Failed to prepare "..amount.." "..ingredient..", timed out")
         return
     end
 
-    -- This only works for functional storage drawers
-    local data = reader.getBlockData()
-    local itemCount = data.handler.BigItems["0"].Amount
+    for i = 1, 3 do
+        for j = 1, #ingredientCheckList do
+            local ingredientCheck = ingredientCheckList[j]
+            local itemCount = ingredientCheck.reader.getBlockData().data.handler.BigItems["0"].Amount
 
-    -- If the lower code is unreliable then this might fix it
-    if itemCount >= amount - ingredientTransferRate * 2 then
-        while true do
-            itemCount = reader.getBlockData().handler.BigItems["0"].Amount
-            if itemCount >= amount then
-                redstoneMgr.setOutput(ingredient.."-transfer", false)
-                redstoneMgr.pulse(ingredient.."-output")
-                break
+            if itemCount >= ingredientCheck.amount then
+                redstoneMgr.setOutput(ingredientCheck.ingredient.."-transfer", false)
+                redstoneMgr.pulse(ingredientCheck.ingredient.."-output")
+                utility.scheduleTimer(2, function ()
+                    activeProcesses = activeProcesses - 1
+                    os.queueEvent("control", "ingredient_arrived", ingredientCheck.ingredient)
+                end)
             end
         end
-    else
-        utility.scheduleTimer((amount - itemCount - 1) * 0.05, checkIngredientArrived, ingredient, amount)
     end
+
+    if #ingredientCheckList > 0 then
+        utility.scheduleTimer(0.05, checkIngredientArrived, 0)
+    end
+
+    -- This only works for functional storage drawers
+
+    -- If the lower code is unreliable then this might fix it
+    --if itemCount >= amount - ingredientTransferRate * 2 then
+    --    while true do
+    --        itemCount = reader.getBlockData().handler.BigItems["0"].Amount
+    --        if itemCount >= amount then
+    --            redstoneMgr.setOutput(ingredient.."-transfer", false)
+    --            redstoneMgr.pulse(ingredient.."-output")
+    --            utility.scheduleTimer(2, function ()
+    --                activeProcesses = activeProcesses - 1
+    --                os.queueEvent("control", "ingredient_arrived", ingredient)
+    --            end)
+    --            break
+    --        end
+    --    end
+    --else
+    --    utility.scheduleTimer((amount - itemCount - 1) * 0.05, checkIngredientArrived, ingredient, amount)
+    --end
 
     --if itemCount < amount then
     --    utility.scheduleTimer(0.05, checkIngredientArrived, ingredient, amount, timeout + 1)
@@ -82,7 +99,16 @@ end
 function module.outputIngredient(ingredient, amount)
     activeProcesses = activeProcesses + 1
     redstoneMgr.setOutput(ingredient.."-transfer", true)
-    utility.scheduleTimer(0.05, checkIngredientArrived, ingredient, amount, 0)
+    if #ingredientCheckList == 0 then
+        utility.scheduleTimer(0.05, checkIngredientArrived, 0)
+    end
+
+    local reader = ingredientReaderMap[ingredient]
+    if reader == nil then
+        error("An unknown ingredient was requested")
+        return
+    end
+    table.insert(ingredientCheckList, { ingredient = ingredient, reader = reader, amount = amount })
 end
 
 function module.spinBasins()
