@@ -23,6 +23,7 @@ function module.scheduleTimer(time, handler, ...)
             return
         elseif timeLeft < 0 then
             -- Insert before this timer
+            timer.time = timer.time - _timeLeft
             table.insert(timers, i, { time = _timeLeft, handlers = { { func = handler, args = {...} } } })
             return
         end
