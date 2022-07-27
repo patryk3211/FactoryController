@@ -38,8 +38,6 @@ function module.loadConfig()
 end
 
 local function checkIngredientArrived(timeout)
-    local toRemove = {}
-
     local count = nil
     for i = 1, 3 do
         count = 0
@@ -49,7 +47,8 @@ local function checkIngredientArrived(timeout)
             if itemCount >= check.amount then
                 redstoneMgr.setOutput(ingredient.."-transfer", false)
                 redstoneMgr.pulse(ingredient.."-output")
-                table.insert(toRemove, ingredient)
+                ingredientCheckList[ingredient] = nil
+                count = count - 1
                 utility.scheduleTimer(2, function ()
                     activeProcesses = activeProcesses - 1
                     os.queueEvent("control", "ingredient_arrived", ingredient)
@@ -58,11 +57,6 @@ local function checkIngredientArrived(timeout)
 
             count = count + 1
         end
-    end
-
-    for i = 1, #toRemove do
-        ingredientCheckList[toRemove[i]] = nil
-        count = count - 1
     end
 
     if count > 0 then
