@@ -47,7 +47,7 @@ local function checkIngredientArrived(timeout)
     for i = 1, 3 do
         for j = 1, #ingredientCheckList do
             local ingredientCheck = ingredientCheckList[j]
-            local itemCount = ingredientCheck.reader.getBlockData().data.handler.BigItems["0"].Amount
+            local itemCount = ingredientCheck.reader.getBlockData().handler.BigItems["0"].Amount
 
             if itemCount >= ingredientCheck.amount then
                 redstoneMgr.setOutput(ingredientCheck.ingredient.."-transfer", false)
