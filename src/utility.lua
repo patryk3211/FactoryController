@@ -37,13 +37,15 @@ function module.handleTimerEvent(eventData)
     end
 
     local firstTimer = timers[1]
-    firstTimer.time = firstTimer.time - 1
-    if firstTimer.time == 0 then
-        for i = 1, #firstTimer.handlers do
-            local handler = firstTimer.handlers[i]
-            handler.func(table.unpack(handler.args))
+    if firstTimer ~= nil then
+        firstTimer.time = firstTimer.time - 1
+        if firstTimer.time == 0 then
+            for i = 1, #firstTimer.handlers do
+                local handler = firstTimer.handlers[i]
+                handler.func(table.unpack(handler.args))
+            end
+            table.remove(timers, 1)
         end
-        table.remove(timers, 1)
     end
 
     systemTimer = os.startTimer(0.05)
