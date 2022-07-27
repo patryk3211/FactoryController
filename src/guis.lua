@@ -7,7 +7,7 @@ local control = require("control")
 
 function module.start()
     return {
-        order = { "top_bar", "top_bar_text", "button_start", "button_select_recipe", "button_manual" },
+        order = { "top_bar", "top_bar_text", "button_shutdown", "button_update", "button_start", "button_select_recipe", "button_manual" },
         button_start = { type = "button", x = 11, y = 3, width = 19, height = 5, text = "Start", fg = colors.white, bg = colors.gray, handler = function ()
             os.queueEvent("start_recipe")
             windows.setGui(module.running)
@@ -19,7 +19,13 @@ function module.start()
             windows.setGui(module.manualControl)
         end},
         top_bar = { type = "panel", x = 1, y = 1, height = 1, width = 39, color = colors.blue },
-        top_bar_text = { type = "text", x = 1, y = 1, height = 1, width = 39, fg = colors.black, bg = colors.blue, text = "Recipe: "..recipeMgr.recipes()[state.recipe].name }
+        top_bar_text = { type = "text", x = 1, y = 1, height = 1, width = 39, fg = colors.black, bg = colors.blue, text = "Recipe: "..recipeMgr.recipes()[state.recipe].name },
+        button_shutdown = { type = "button", x = 39 - 7, y = 1, height = 1, width = 8, fg = colors.white, bg = colors.red, text = "Shutdown", handler = function ()
+            os.shutdown()
+        end},
+        button_update = { type = "button", x = 39 - 13, y = 1, height = 1, width = 6, fg = colors.white, bg = colors.green, text = "Update", handler = function ()
+            shell.execute("updater")
+        end}
     }
 end
 
