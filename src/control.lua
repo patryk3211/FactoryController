@@ -38,26 +38,26 @@ function module.loadConfig()
 end
 
 local function checkIngredientArrived(timeout)
-    if timeout > 200 then
-        state.error = "Failed to prepare "..amount.." "..ingredient..", timed out"
-        print("Failed to prepare "..amount.." "..ingredient..", timed out")
-        return
-    end
+    local toRemove = {}
 
     for i = 1, 3 do
-        for j = 1, #ingredientCheckList do
-            local ingredientCheck = ingredientCheckList[j]
-            local itemCount = ingredientCheck.reader.getBlockData().handler.BigItems["0"].Amount
+        for ingredient, check in pairs(ingredientCheckList) do
+            local itemCount = check.reader.getBlockData().handler.BigItems["0"].Amount
 
-            if itemCount >= ingredientCheck.amount then
-                redstoneMgr.setOutput(ingredientCheck.ingredient.."-transfer", false)
-                redstoneMgr.pulse(ingredientCheck.ingredient.."-output")
+            if itemCount >= check.amount then
+                redstoneMgr.setOutput(ingredient.."-transfer", false)
+                redstoneMgr.pulse(ingredient.."-output")
+                table.insert(toRemove, ingredient)
                 utility.scheduleTimer(2, function ()
                     activeProcesses = activeProcesses - 1
-                    os.queueEvent("control", "ingredient_arrived", ingredientCheck.ingredient)
+                    os.queueEvent("control", "ingredient_arrived", ingredient)
                 end)
             end
         end
+    end
+
+    for i = 1, #toRemove do
+        ingredientCheckList[toRemove[i]] = nil
     end
 
     if #ingredientCheckList > 0 then
@@ -77,7 +77,7 @@ function module.outputIngredient(ingredient, amount)
         error("An unknown ingredient was requested")
         return
     end
-    table.insert(ingredientCheckList, { ingredient = ingredient, reader = reader, amount = amount })
+    ingredientCheckList[ingredient] = { reader = reader, amount = amount }
 end
 
 function module.spinBasins()
