@@ -60,6 +60,8 @@ local function interpretLine(context)
         line = list[context.current_line]
     end
 
+    print("Interpreting: '"..line.."'")
+
     local instruction = line:match("([%w_]+)%s*");
     local arg1 = line:match("[%w_]+%s*([%w_]+)%s*");
     local arg2 = line:match("[%w_]+%s*[%w_]+%s*([%w_%.]+)%s*");
@@ -123,6 +125,8 @@ function module.handleControlEvent(eventData)
         return
     end
     local event = eventData[2]
+
+    print("Event: "..event)
 
     if currentContext.wait == "idle" then
         if not control.isBusy() then
