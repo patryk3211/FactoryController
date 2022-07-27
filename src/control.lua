@@ -63,37 +63,6 @@ local function checkIngredientArrived(timeout)
     if #ingredientCheckList > 0 then
         utility.scheduleTimer(0.05, checkIngredientArrived, 0)
     end
-
-    -- This only works for functional storage drawers
-
-    -- If the lower code is unreliable then this might fix it
-    --if itemCount >= amount - ingredientTransferRate * 2 then
-    --    while true do
-    --        itemCount = reader.getBlockData().handler.BigItems["0"].Amount
-    --        if itemCount >= amount then
-    --            redstoneMgr.setOutput(ingredient.."-transfer", false)
-    --            redstoneMgr.pulse(ingredient.."-output")
-    --            utility.scheduleTimer(2, function ()
-    --                activeProcesses = activeProcesses - 1
-    --                os.queueEvent("control", "ingredient_arrived", ingredient)
-    --            end)
-    --            break
-    --        end
-    --    end
-    --else
-    --    utility.scheduleTimer((amount - itemCount - 1) * 0.05, checkIngredientArrived, ingredient, amount)
-    --end
-
-    --if itemCount < amount then
-    --    utility.scheduleTimer(0.05, checkIngredientArrived, ingredient, amount, timeout + 1)
-    --else
-    --    redstoneMgr.setOutput(ingredient.."-transfer", false)
-    --    redstoneMgr.pulse(ingredient.."-output")
-    --    utility.scheduleTimer(2, function ()
-    --        activeProcesses = activeProcesses - 1
-    --        os.queueEvent("control", "ingredient_arrived", ingredient)
-    --    end)
-    --end
 end
 
 function module.outputIngredient(ingredient, amount)
