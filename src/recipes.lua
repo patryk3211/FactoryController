@@ -103,7 +103,7 @@ local function interpret(context)
         os.queueEvent("recipe_stopped")
         return
     end
-    for i = 1, 8 do
+    --for i = 1, 8 do
         local result = { interpretLine(context) }
         context.current_line = context.current_line + 1
 
@@ -116,7 +116,7 @@ local function interpret(context)
         elseif result[1] == "wait" then
             return
         end
-    end
+    --end
     utility.scheduleTimer(0.05, interpret, context)
 end
 

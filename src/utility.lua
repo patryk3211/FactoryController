@@ -29,7 +29,7 @@ function module.scheduleTimer(time, handler, ...)
         end
     end
 
-    table.insert(timers, { time = timeLeft, handlers = { { func = handler, args = {...} } } })
+    timers[#timers+1] = { time = timeLeft, handlers = { { func = handler, args = {...} } } }
 end
 
 function module.handleTimerEvent(eventData)
@@ -49,7 +49,11 @@ function module.handleTimerEvent(eventData)
         end
     end
 
-    systemTimer = os.startTimer(0.05)
+    if timers[1] ~= nil then
+        systemTimer = os.startTimer(0.05)
+    else
+        systemTimer = nil
+    end
 end
 
 return module
