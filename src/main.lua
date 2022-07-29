@@ -38,5 +38,7 @@ while running do
         windows.setGui(guis.start())
     elseif event == "control" then
         recipes.handleControlEvent(eventData)
+    elseif event == "update_running" then
+        guis.updateRunning()
     end
 end
