@@ -155,7 +155,7 @@ function module.running()
         stop_button = { type = "button", x = 39-3, y = 1, height = 1, width = 4, bg = colors.red, fg = colors.white, text = "Stop", handler = function ()
             os.queueEvent("stop_recipe")
         end},
-        status_text = { type = "text", x = 1, y = 2, bg = colors.lightGray, fg = color.black, text = "Status: "..state.statusText }
+        status_text = { type = "text", x = 1, y = 2, bg = colors.lightGray, fg = colors.black, text = "Status: "..state.statusText }
     }
 end
 
