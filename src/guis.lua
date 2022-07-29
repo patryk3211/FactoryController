@@ -14,7 +14,7 @@ function module.start()
         order = { "top_bar", "top_bar_text", "button_shutdown", "button_update", "button_start", "button_select_recipe", "button_manual" },
         button_start = { type = "button", x = 11, y = 3, width = 19, height = 5, text = "Start", fg = colors.white, bg = colors.gray, handler = function ()
             os.queueEvent("start_recipe")
-            windows.setGui(module.running)
+            windows.setGui(module.running())
         end},
         button_select_recipe = { type = "button", x = 11, y = 9, width = 19, height = 5, text = "Select Recipe", fg = colors.white, bg = colors.gray, handler = function ()
             windows.setGui(module.recipes())
