@@ -147,13 +147,21 @@ module.manualControl = {
     end}
 }
 
-module.running = {
-    order = { "top_bar", "top_bar_text", "stop_button" },
-    top_bar = { type = "panel", x = 1, y = 1, height = 1, width = 39, color = colors.blue },
-    top_bar_text = { type = "text", x = 1, y = 1, bg = colors.blue, fg = colors.black, text = "Running" },
-    stop_button = { type = "button", x = 39-3, y = 1, height = 1, width = 4, bg = colors.red, fg = colors.white, text = "Stop", handler = function ()
-        os.queueEvent("stop_recipe")
-    end}
-}
+function module.running()
+    return {
+        order = { "top_bar", "top_bar_text", "stop_button", "status_text" },
+        top_bar = { type = "panel", x = 1, y = 1, height = 1, width = 39, color = colors.blue },
+        top_bar_text = { type = "text", x = 1, y = 1, bg = colors.blue, fg = colors.black, text = "Running" },
+        stop_button = { type = "button", x = 39-3, y = 1, height = 1, width = 4, bg = colors.red, fg = colors.white, text = "Stop", handler = function ()
+            os.queueEvent("stop_recipe")
+        end},
+        status_text = { type = "text", x = 1, y = 2, bg = colors.lightGray, fg = color.black, text = "Status: "..state.statusText }
+    }
+end
+
+function module.updateRunning()
+    windows.setGui(module.running())
+    windows.redraw()
+end
 
 return module

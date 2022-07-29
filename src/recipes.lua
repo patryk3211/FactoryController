@@ -93,6 +93,8 @@ local function interpretLine(context)
         control.emptyInputTank()
     elseif instruction == "pump_out" then
         control.outputProduct()
+    elseif instruction == "status_text" then
+        state.statusText = line:match("[%w_]+%s*(.*)")
     else
         if instruction ~= nil then
             error("Unknown instruction '"..instruction.."'")
