@@ -2,6 +2,7 @@ local control = require "control"
 local utility = require "utility"
 local redstone= require "redstone"
 local state   = require "state"
+local guis    = require "guis"
 local module = {}
 
 local recipes = {}
@@ -95,6 +96,7 @@ local function interpretLine(context)
         control.outputProduct()
     elseif instruction == "status_text" then
         state.statusText = line:match("[%w_]+%s*(.*)")
+        guis.updateRunning()
     else
         if instruction ~= nil then
             error("Unknown instruction '"..instruction.."'")
