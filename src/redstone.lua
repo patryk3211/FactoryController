@@ -22,6 +22,9 @@ end
 
 function module.setOutput(port, value)
     local mapping = mappings[port]
+    if mapping == nil then
+        error("Failed to write to port '"..port.."'")
+    end
     local peri = peripherals[mapping.dev]
     local currentValue = peri.sides[mapping.side]
     if value then
@@ -35,6 +38,9 @@ end
 
 function module.getInput(port)
     local mapping = mappings[port]
+    if mapping == nil then
+        error("Failed to read from port '"..port.."'")
+    end
     local peri = peripherals[mapping.dev]
     local value = peri.device.getAnalogInput(mapping.side)
     return bit32.band(1, bit32.rshift(value, mapping.bit)) == 1
