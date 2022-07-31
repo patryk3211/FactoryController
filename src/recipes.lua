@@ -82,12 +82,19 @@ local function interpretLine(context)
         if arg1 == "time" then
             return "sleep", tonumber(arg2)
         elseif arg1 == "idle" then
+            if not control.isBusy() then
+                -- Not busy, discard all unprocessed events and continue execution
+                events = {}
+                return
+            end
             context.wait = "idle"
             return "wait"
         elseif arg1 == "event" then
-            while #events > 0 do
-                local event = table.remove(events, 1)
+            for i = 1, #events do
+                -- Check for any unhandled events
+                local event = events[i]
                 if event == arg2 then
+                    table.remove(events, i)
                     return
                 end
             end
@@ -100,10 +107,14 @@ local function interpretLine(context)
     elseif instruction == "pump_in" then
         control.emptyInputTank()
     elseif instruction == "pump_out" then
-        control.outputProduct()
+        control.outputLiquidProduct()
     elseif instruction == "status_text" then
         state.statusText = line:match("[%w_]+%s*(.*)")
         os.queueEvent("update_running")
+    elseif instruction == "start_recipe" then
+        control.recipeStart()
+    elseif instruction == "item_out" then
+        control.outputItemProduct()
     else
         if instruction ~= nil then
             error("Unknown instruction '"..instruction.."'")

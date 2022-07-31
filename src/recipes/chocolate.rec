@@ -13,7 +13,7 @@ loop:
 spin_basin
 status_text Pumping out product
 pump_out
-wait event output_tank_empty
+wait event output_empty
 spin_basin
 status_text Pumping in milk
 pump_in

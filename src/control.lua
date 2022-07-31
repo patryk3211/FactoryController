@@ -6,19 +6,18 @@ local config = require("config")
 local state = require("state")
 
 local controlConfig = nil
-local ingredientTransferRate = 1
 local ingredientReaderMap = {}
 
 local activeProcesses = 0
 local ingredientCheckList = {}
+
+local mixer = nil
 
 function module.loadConfig()
     controlConfig = config.loadConfig(shell.resolve("config/control.conf"), "values")
     if controlConfig == nil then
         error("Unexpected nil config")
     end
-
-    ingredientTransferRate = controlConfig.ingredientTransferRate
 
     -- Block readers (blockReader_0:sugar;blockReader_1:cocoa_beans,cocoa_powder;blockReader_2:cocoa_butter)
     local blockReaders = controlConfig.blockReaders
@@ -34,7 +33,7 @@ function module.loadConfig()
         end
     end
 
-    print("Ingredient Transfer Rate = "..ingredientTransferRate)
+    mixer = peripheral.wrap(controlConfig.mixer)
 end
 
 local function checkIngredientArrived(timeout)
@@ -159,9 +158,9 @@ function module.emptyInputTank()
 end
 
 local function waitPumpOutEnd()
-    if redstoneMgr.getInput("output_tank_empty") then
+    if redstoneMgr.getInput("output_empty") then
         activeProcesses = activeProcesses - 1
-        os.queueEvent("control", "output_tank_empty")
+        os.queueEvent("control", "output_empty")
     else
         utility.scheduleTimer(0.1, waitPumpOutEnd)
     end
@@ -170,21 +169,71 @@ end
 local function waitPumpOutStart(timeout)
     if timeout >= 100 then
         activeProcesses = activeProcesses - 1
-        os.queueEvent("control", "output_tank_empty")
+        os.queueEvent("control", "output_empty")
         print("Product pump out timed out trying to start, might have been empty")
         return
     end
 
-    if redstoneMgr.getInput("output_tank_empty") then
+    if redstoneMgr.getInput("output_empty") then
         utility.scheduleTimer(0.1, waitPumpOutStart, timeout + 1)
     else
         waitPumpOutEnd()
     end
 end
 
-function module.outputProduct()
+function module.outputLiquidProduct()
     activeProcesses = activeProcesses + 1
     waitPumpOutStart(0)
+end
+
+local function waitItemOutputEnd()
+    if redstoneMgr.getInput("output_empty") then
+        activeProcesses = activeProcesses - 1
+        redstoneMgr.setOutput("output_enable", false)
+        os.queueEvent("control", "output_empty")
+    else
+        utility.scheduleTimer(0.1, waitItemOutputEnd)
+    end
+end
+
+local function waitItemOutputStart(timeout)
+    if timeout >= 100 then
+        activeProcesses = activeProcesses - 1
+        redstoneMgr.setOutput("output_enable", false)
+        os.queueEvent("control", "output_empty")
+        print("Product output timed out trying to start, might have been empty")
+        return
+    end
+
+    if redstoneMgr.getInput("output_empty") then
+        utility.scheduleTimer(0.1, waitItemOutputStart, timeout + 1)
+    else
+        waitItemOutputEnd()
+    end
+end
+
+function module.outputItemProduct()
+    activeProcesses = activeProcesses + 1
+    redstoneMgr.setOutput("output_enable", true)
+    waitItemOutputStart(0)
+end
+
+local function isMixerMixing()
+    return mixer.isRunning()
+end
+
+local function waitRecipeEnd()
+    if not isMixerMixing() then
+        activeProcesses = activeProcesses - 1
+        os.queueEvent("control", "recipe_finished")
+    else
+        utility.scheduleTimer(0.1, waitRecipeEnd)
+    end
+end
+
+function module.recipeStart()
+    activeProcesses = activeProcesses + 1
+    waitRecipeEnd()
 end
 
 function module.isBusy()

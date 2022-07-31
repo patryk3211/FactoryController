@@ -26,8 +26,8 @@ shell.setDir(installRoot.."config")
 downloadFile("mappings.conf")
 
 local controlConfFile = io.open(installRoot.."config/control.conf", "w+")
-controlConfFile:write("ingredientTransferRate = 1\n")
 controlConfFile:write("blockReaders = blockReader_0:sugar;blockReader_1:cocoa_beans,cocoa_powder;blockReader_2:cocoa_butter")
+controlConfFile:write("mixer = mechanicalMixer_0")
 controlConfFile:close()
 
 print("Configs ready")
