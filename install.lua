@@ -43,6 +43,10 @@ print("Recipes downloaded")
 shell.setDir(installRoot)
 downloadFile("version")
 
+local monitor = io.open(installRoot.."monitor", "w+")
+monitor:write("monitor_0")
+monitor:close()
+
 print("Adding to startup")
 fs.makeDir("/startup")
 local starterFile = io.open("/startup/controllerStart.lua", "w+")
