@@ -80,7 +80,9 @@ function module.outputIngredient(ingredient, amount)
 end
 
 function module.spinBasins(dispense)
-    dispense = dispense or true
+    if dispense == nil then
+        dispense = true
+    end
 
     activeProcesses = activeProcesses + 1
     redstoneMgr.pulse("basin_control")
