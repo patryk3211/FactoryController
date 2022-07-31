@@ -6,6 +6,8 @@ local module = {}
 
 local recipes = {}
 
+local events = {}
+
 local currentContext = nil
 
 local function parseRecipe(file)
@@ -83,6 +85,12 @@ local function interpretLine(context)
             context.wait = "idle"
             return "wait"
         elseif arg1 == "event" then
+            while #events > 0 do
+                local event = table.remove(events, 1)
+                if event == arg2 then
+                    return
+                end
+            end
             context.wait = "event"
             context.wait_event = arg2
             return "wait"
@@ -144,6 +152,8 @@ function module.handleControlEvent(eventData)
             currentContext.wait_event = nil
             interpret(currentContext)
         end
+    else
+        table.insert(events, event)
     end
 end
 
@@ -153,7 +163,7 @@ local function homeBasins()
         utility.scheduleTimer(0.05, interpret, currentContext)
     else
         control.spinBasins()
-        utility.scheduleTimer(1.2, homeBasins)
+        utility.scheduleTimer(1.5, homeBasins)
     end
 end
 
