@@ -4,7 +4,7 @@ local display = nil
 local currentWindow = {}
 
 function module.start()
-    display = peripheral.wrap(io.lines(shell.resolve("monitor"), "l"))
+    display = peripheral.wrap(io.lines(shell.resolve("monitor"), "a"))
 
     display.setBackgroundColor(colors.lightGray)
     display.clear()
