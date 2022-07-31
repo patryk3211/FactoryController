@@ -79,7 +79,9 @@ function module.outputIngredient(ingredient, amount)
     ingredientCheckList[ingredient] = { reader = reader, amount = amount }
 end
 
-function module.spinBasins()
+function module.spinBasins(dispense)
+    dispense = dispense or true
+
     activeProcesses = activeProcesses + 1
     redstoneMgr.pulse("basin_control")
     utility.scheduleTimer(1.5, function ()
@@ -88,14 +90,19 @@ function module.spinBasins()
             activeProcesses = activeProcesses - 1
             os.queueEvent("control", "basin_ready")
         else
-            redstoneMgr.setOutput("dispenser_"..state.basinPosition, true)
-            utility.scheduleTimer(0.3, function ()
-                redstoneMgr.setOutput("dispenser_"..state.basinPosition, false)
-            end)
-            utility.scheduleTimer(1, function ()
+            if dispense then
+                redstoneMgr.setOutput("dispenser_"..state.basinPosition, true)
+                utility.scheduleTimer(0.3, function ()
+                    redstoneMgr.setOutput("dispenser_"..state.basinPosition, false)
+                end)
+                utility.scheduleTimer(1, function ()
+                    activeProcesses = activeProcesses - 1
+                    os.queueEvent("control", "basin_ready")
+                end)
+            else
                 activeProcesses = activeProcesses - 1
                 os.queueEvent("control", "basin_ready")
-            end)
+            end
         end
     end)
 end

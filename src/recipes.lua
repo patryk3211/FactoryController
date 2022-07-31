@@ -162,7 +162,7 @@ local function homeBasins()
         state.basinPosition = 0
         utility.scheduleTimer(0.05, interpret, currentContext)
     else
-        control.spinBasins()
+        control.spinBasins(false)
         utility.scheduleTimer(1.5, homeBasins)
     end
 end
