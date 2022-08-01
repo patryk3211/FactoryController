@@ -218,6 +218,10 @@ function module.outputItemProduct()
     waitItemOutputStart(0)
 end
 
+function module.mixerHasBasin()
+    return mixer.hasBasin()
+end
+
 local function isMixerMixing()
     return mixer.isRunning()
 end

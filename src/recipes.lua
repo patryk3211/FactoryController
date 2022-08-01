@@ -169,7 +169,7 @@ function module.handleControlEvent(eventData)
 end
 
 local function homeBasins()
-    if redstone.getInput("basin_sensor") then
+    if control.mixerHasBasin() then
         state.basinPosition = 0
         utility.scheduleTimer(0.05, interpret, currentContext)
     else
