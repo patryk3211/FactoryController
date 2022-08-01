@@ -37,7 +37,7 @@ while running do
         recipeContext = nil
         windows.setGui(guis.start())
     elseif event == "control" then
-        recipes.handleControlEvent(eventData)
+        recipes.handleControlEvent(eventData[2])
     elseif event == "update_running" then
         guis.updateRunning()
     end

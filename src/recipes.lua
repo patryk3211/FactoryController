@@ -144,24 +144,23 @@ local function interpret(context)
     utility.scheduleTimer(0.05, interpret, context)
 end
 
-function module.handleControlEvent(eventData)
+function module.handleControlEvent(event)
     if currentContext == nil or currentContext.wait == nil then
         return
     end
-    local event = eventData[2]
 
     print("Event: "..event)
 
     if currentContext.wait == "idle" then
         if not control.isBusy() then
             currentContext.wait = nil
-            interpret(currentContext)
+            utility.scheduleTimer(0.05, interpret, currentContext)
         end
     elseif currentContext.wait == "event" then
         if currentContext.wait_event == event then
             currentContext.wait = nil
             currentContext.wait_event = nil
-            interpret(currentContext)
+            utility.scheduleTimer(0.05, interpret, currentContext)
         end
     else
         table.insert(events, event)
