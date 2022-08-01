@@ -13,6 +13,8 @@ local ingredientCheckList = {}
 
 local mixer = nil
 
+local eventHandler = nil
+
 function module.loadConfig()
     controlConfig = config.loadConfig(shell.resolve("config/control.conf"), "values")
     if controlConfig == nil then
@@ -36,6 +38,10 @@ function module.loadConfig()
     mixer = peripheral.wrap(controlConfig.mixer)
 end
 
+function module.setEventHandler(handler)
+    eventHandler = handler
+end
+
 local function checkIngredientArrived(timeout)
     local count = nil
     for i = 1, 3 do
@@ -50,7 +56,8 @@ local function checkIngredientArrived(timeout)
                 count = count - 1
                 utility.scheduleTimer(2, function ()
                     activeProcesses = activeProcesses - 1
-                    os.queueEvent("control", "ingredient_arrived", ingredient)
+                    -- os.queueEvent("control", "ingredient_arrived", ingredient)
+                    eventHandler("ingredient_arrived")
                 end)
             end
 
@@ -89,7 +96,8 @@ function module.spinBasins(dispense)
         state.basinPosition = (state.basinPosition + 1) % 4
         if state.basinPosition == 0 then
             activeProcesses = activeProcesses - 1
-            os.queueEvent("control", "basin_ready")
+            -- os.queueEvent("control", "basin_ready")
+            eventHandler("basin_ready")
         else
             if dispense then
                 redstoneMgr.setOutput("dispenser_"..state.basinPosition, true)
@@ -98,11 +106,13 @@ function module.spinBasins(dispense)
                 end)
                 utility.scheduleTimer(1, function ()
                     activeProcesses = activeProcesses - 1
-                    os.queueEvent("control", "basin_ready")
+                    -- os.queueEvent("control", "basin_ready")
+                    eventHandler("basin_ready")
                 end)
             else
                 activeProcesses = activeProcesses - 1
-                os.queueEvent("control", "basin_ready")
+                -- os.queueEvent("control", "basin_ready")
+                eventHandler("basin_ready")
             end
         end
     end)
@@ -118,14 +128,16 @@ function module.setOutputTank(chocolate)
     state.activeValve = newValve
     utility.scheduleTimer(1, function ()
         activeProcesses = activeProcesses - 1
-        os.queueEvent("control", "valve_switched", newValve)
+        -- os.queueEvent("control", "valve_switched", newValve)
+        eventHandler("valve_switched")
     end)
 end
 
 local function waitForLiquid(name, timeout)
     if redstoneMgr.getInput("liquid_ready") then
         activeProcesses = activeProcesses - 1
-        os.queueEvent("control", "liquid_ready")
+        -- os.queueEvent("control", "liquid_ready")
+        eventHandler("liquid_ready")
         redstoneMgr.setOutput("fill_"..name, false)
     else
         if timeout > 100 then
@@ -146,7 +158,8 @@ end
 local function waitInputTankEmpty()
     if redstoneMgr.getInput("liquid_empty") then
         activeProcesses = activeProcesses - 1
-        os.queueEvent("control", "liquid_empty")
+        -- os.queueEvent("control", "liquid_empty")
+        eventHandler("liquid_empty")
     else
         utility.scheduleTimer(0.1, waitInputTankEmpty)
     end
@@ -160,7 +173,8 @@ end
 local function waitPumpOutEnd()
     if redstoneMgr.getInput("output_empty") then
         activeProcesses = activeProcesses - 1
-        os.queueEvent("control", "output_empty")
+        -- os.queueEvent("control", "output_empty")
+        eventHandler("output_empty")
     else
         utility.scheduleTimer(0.1, waitPumpOutEnd)
     end
@@ -169,7 +183,8 @@ end
 local function waitPumpOutStart(timeout)
     if timeout >= 100 then
         activeProcesses = activeProcesses - 1
-        os.queueEvent("control", "output_empty")
+        -- os.queueEvent("control", "output_empty")
+        eventHandler("output_empty")
         print("Product pump out timed out trying to start, might have been empty")
         return
     end
@@ -190,7 +205,8 @@ local function waitItemOutputEnd()
     if redstoneMgr.getInput("output_empty") then
         activeProcesses = activeProcesses - 1
         redstoneMgr.setOutput("output_enable", false)
-        os.queueEvent("control", "output_empty")
+        -- os.queueEvent("control", "output_empty")
+        eventHandler("output_empty")
     else
         utility.scheduleTimer(0.1, waitItemOutputEnd)
     end
@@ -200,7 +216,8 @@ local function waitItemOutputStart(timeout)
     if timeout >= 100 then
         activeProcesses = activeProcesses - 1
         redstoneMgr.setOutput("output_enable", false)
-        os.queueEvent("control", "output_empty")
+        -- os.queueEvent("control", "output_empty")
+        eventHandler("output_empty")
         print("Product output timed out trying to start, might have been empty")
         return
     end
@@ -229,7 +246,8 @@ end
 local function waitRecipeEnd()
     if not isMixerMixing() then
         activeProcesses = activeProcesses - 1
-        os.queueEvent("control", "recipe_finished")
+        -- os.queueEvent("control", "recipe_finished")
+        eventHandler("recipe_finished")
     else
         utility.scheduleTimer(0.1, waitRecipeEnd)
     end

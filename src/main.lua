@@ -13,6 +13,8 @@ redstoneMgr.loadMappings()
 control.loadConfig()
 recipes.load()
 
+control.setEventHandler(recipes.handleControlEvent)
+
 print("Initialized successfully")
 
 windows.setGui(guis.start())
@@ -36,8 +38,8 @@ while running do
     elseif event == "recipe_stopped" then
         recipeContext = nil
         windows.setGui(guis.start())
-    elseif event == "control" then
-        recipes.handleControlEvent(eventData[2])
+    --elseif event == "control" then
+    --    recipes.handleControlEvent(eventData[2])
     elseif event == "update_running" then
         guis.updateRunning()
     end
