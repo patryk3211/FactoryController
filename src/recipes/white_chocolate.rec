@@ -1,7 +1,7 @@
 name=White Chocolate
 init:
 status_text Waiting for ingredients
-output white_chocolate
+output_liquid white_chocolate
 base_fluid milk
 ingredient sugar 8
 ingredient cocoa_butter 8

@@ -70,7 +70,7 @@ local function interpretLine(context)
     local arg1 = line:match("[%w_]+%s*([%w_]+)%s*");
     local arg2 = line:match("[%w_]+%s*[%w_]+%s*([%w_%.]+)%s*");
 
-    if instruction == "output" then
+    if instruction == "output_liquid" then
         control.setOutputTank(arg1)
     elseif instruction == "base_fluid" then
         control.prepareLiquid(arg1)
