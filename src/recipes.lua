@@ -145,7 +145,7 @@ local function interpret(context)
 end
 
 function module.handleControlEvent(event)
-    if currentContext == nil or currentContext.wait == nil then
+    if currentContext == nil then
         return
     end
 
@@ -154,6 +154,7 @@ function module.handleControlEvent(event)
     if currentContext.wait == "idle" then
         if not control.isBusy() then
             currentContext.wait = nil
+            events = {}
             utility.scheduleTimer(0.05, interpret, currentContext)
         end
     elseif currentContext.wait == "event" then
@@ -161,6 +162,8 @@ function module.handleControlEvent(event)
             currentContext.wait = nil
             currentContext.wait_event = nil
             utility.scheduleTimer(0.05, interpret, currentContext)
+        else
+            table.insert(events, event)
         end
     else
         table.insert(events, event)

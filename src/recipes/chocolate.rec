@@ -8,22 +8,25 @@ ingredient cocoa_beans 8
 wait time 1.5
 ingredient sugar 8
 ingredient cocoa_beans 8
-wait idle
 loop:
+wait idle
 spin_basin
 status_text Pumping out product
 pump_out
 wait event output_empty
+wait idle
 spin_basin
 status_text Pumping in milk
 pump_in
 wait event liquid_empty
+wait idle
 spin_basin
 status_text Mixing chocolate
 ingredient cocoa_beans 8
 wait event basin_ready
 ingredient cocoa_beans 8
 ingredient sugar 8
+wait idle
 spin_basin
 wait time 1.5
 ingredient sugar 8
