@@ -2,7 +2,6 @@ name=Chocolate
 init:
 status_text Waiting for ingredients
 output_liquid chocolate
-base_fluid milk
 ingredient sugar 8
 ingredient cocoa_beans 8
 wait time 1.5
@@ -13,6 +12,7 @@ wait idle
 spin_basin
 status_text Pumping out product
 pump_out
+base_fluid milk
 wait event output_empty
 wait idle
 spin_basin
